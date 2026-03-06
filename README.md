@@ -11,10 +11,10 @@
 <br/>
 
 <!-- PROFILE BADGES -->
-![Profile Views](https://komarev.com/ghpvc/?username=kishangoswami&style=for-the-badge&color=ff0044)
-[![Portfolio](https://img.shields.io/badge/🌐_PORTFOLIO-LIVE-ff0044?style=for-the-badge&labelColor=0a0a0f)](https://kishangoswami.dev)
+![Profile Views](https://komarev.com/ghpvc/?username=kishan09k&style=for-the-badge&color=ff0044)
+[![Portfolio](https://img.shields.io/badge/🌐_PORTFOLIO-LIVE-ff0044?style=for-the-badge&labelColor=0a0a0f)](https://kishan09k.github.io)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/kishangoswami)
-[![Email](https://img.shields.io/badge/Email-Transmit-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:kishan@example.com)
+[![Email](https://img.shields.io/badge/Email-Transmit-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:goswami09@proton.me)
 
 </div>
 
@@ -84,15 +84,15 @@ const kishan = {
 <br/><br/>
 
 <!-- STREAK STATS -->
-<a href="https://github.com/kishangoswami">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=kishangoswami&theme=radical&hide_border=true&background=0a0a0f&stroke=ff004422&ring=ff0044&fire=ff0044&currStreakLabel=ff0044&sideLabels=e0dfe8&currStreakNum=e0dfe8&sideNums=e0dfe8&dates=6a6a8a" />
+<a href="https://github.com/kishan09k">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=kishan09k&theme=radical&hide_border=true&background=0a0a0f&stroke=ff004422&ring=ff0044&fire=ff0044&currStreakLabel=ff0044&sideLabels=e0dfe8&currStreakNum=e0dfe8&sideNums=e0dfe8&dates=6a6a8a" />
 </a>
 
 <br/><br/>
 
 <!-- ACTIVITY GRAPH -->
-<a href="https://github.com/kishangoswami">
-  <img width="95%" src="https://github-readme-activity-graph.vercel.app/graph?username=kishangoswami&bg_color=0a0a0f&color=e0dfe8&line=ff0044&point=ff0044&area=true&area_color=ff004430&hide_border=true&custom_title=Contribution%20Activity" />
+<a href="https://github.com/kishan09k">
+  <img width="95%" src="https://github-readme-activity-graph.vercel.app/graph?username=kishan09k&bg_color=0a0a0f&color=e0dfe8&line=ff0044&point=ff0044&area=true&area_color=ff004430&hide_border=true&custom_title=Contribution%20Activity" />
 </a>
 
 </div>
@@ -103,20 +103,20 @@ const kishan = {
 
 <div align="center">
 
-<a href="https://github.com/kishangoswami/chemreact-sim">
-  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishangoswami&repo=chemreact-sim&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
+<a href="https://github.com/kishan09k/chemreact-sim">
+  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishan09k&repo=chemreact-sim&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
 </a>
 &nbsp;
-<a href="https://github.com/kishangoswami/goflow-engine">
-  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishangoswami&repo=goflow-engine&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
+<a href="https://github.com/kishan09k/goflow-engine">
+  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishan09k&repo=goflow-engine&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
 </a>
 
-<a href="https://github.com/kishangoswami/pixelcraft">
-  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishangoswami&repo=pixelcraft&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
+<a href="https://github.com/kishan09k/pixelcraft">
+  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishan09k&repo=pixelcraft&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
 </a>
 &nbsp;
-<a href="https://github.com/kishangoswami/dataverse">
-  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishangoswami&repo=dataverse&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
+<a href="https://github.com/kishan09k/dataverse">
+  <img width="47%" src="https://github-readme-stats.vercel.app/api/pin/?username=kishan09k&repo=dataverse&theme=radical&hide_border=true&bg_color=0a0a0f&title_color=ff0044&icon_color=ff0044&text_color=e0dfe8" />
 </a>
 
 </div>
@@ -127,7 +127,7 @@ const kishan = {
 
 <div align="center">
 
-<img src="https://github-profile-trophy.vercel.app/?username=kishangoswami&theme=radical&no-frame=true&no-bg=true&column=7&margin-w=10&margin-h=10" />
+<img src="https://github-profile-trophy.vercel.app/?username=kishan09k&theme=radical&no-frame=true&no-bg=true&column=7&margin-w=10&margin-h=10" />
 
 </div>
 
@@ -138,7 +138,7 @@ const kishan = {
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kishangoswami/kishangoswami/output/github-snake-dark.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kishangoswami/kishan09k/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/kishangoswami/kishangoswami/output/github-snake.svg" />
   <img alt="github-snake" src="https://raw.githubusercontent.com/kishangoswami/kishangoswami/output/github-snake-dark.svg" />
 </picture>
