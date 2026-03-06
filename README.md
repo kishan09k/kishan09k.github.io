@@ -1,77 +1,87 @@
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=0:0f0f0f,100:1a1a1a&height=200&section=header&text=Kishan%20Goswami&fontSize=38&fontColor=ffffff&desc=AI%20Engineer%20%7C%20Backend%20Focused%20Developer&descSize=14&descAlignY=65" />
-</p>
+# Kishan Goswami — Developer Portfolio
 
----
+A cyberpunk-themed, interactive developer portfolio built with vanilla HTML, CSS, and JavaScript.
 
-## About
+![Status](https://img.shields.io/badge/status-OPERATIONAL-ff0044?style=flat-square)
+![Tech](https://img.shields.io/badge/stack-HTML%20%7C%20CSS%20%7C%20JS-0a0a0f?style=flat-square&labelColor=ff0044)
 
-Backend-focused developer building scalable systems and exploring AI-driven automation.
+## Preview
 
-I approach development through structured architecture, performance thinking, and long-term maintainability.
+> *"System Breach Detected"* — A dangerous, neon-red cyberpunk aesthetic with scanline overlays, glitch effects, and HUD-style UI elements.
 
-Currently focused on:
+## Sections
 
-- AI Agents  
-- Backend Optimization  
-- System Design  
-- Intelligent Automation  
-
----
+| # | Section | Description |
+|---|---------|-------------|
+| 01 | **Hero** | 3D wireframe scene (Three.js), particle background, glitch name, terminal typing effect |
+| 02 | **About** | Animated mascot, fun-fact counters, threat-level skill bars, classified intel card |
+| 03 | **Skills** | Interactive solar system — tap any orbiting planet to view skill details |
+| 04 | **Projects** | 3D flip cards with project details, status badges, and links |
+| 05 | **Playground** | Bubble Assault game + chemical element drag-and-drop quiz |
+| 06 | **Contact** | Secure transmission form with animated send states |
 
 ## Tech Stack
 
-<p>
-  <img src="https://img.shields.io/badge/HTML5-111111?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS3-111111?style=for-the-badge&logo=css3&logoColor=white" />
-  <img src="https://img.shields.io/badge/JavaScript-111111?style=for-the-badge&logo=javascript&logoColor=white" />
-  <img src="https://img.shields.io/badge/PHP-111111?style=for-the-badge&logo=php&logoColor=white" />
-  <img src="https://img.shields.io/badge/MySQL-111111?style=for-the-badge&logo=mysql&logoColor=white" />
-</p>
+- **HTML5** — Semantic markup, accessible structure
+- **CSS3** — Glassmorphism, CSS Grid, Flexbox, custom properties, keyframe animations
+- **JavaScript** (Vanilla ES6+) — All interactivity, games, cursor, typing
+- **[Three.js](https://threejs.org/)** r128 — 3D wireframe hero scene
+- **[GSAP](https://gsap.com/)** 3.12.5 + ScrollTrigger — Scroll-driven animations
+- **[Particles.js](https://vincentgarreau.com/particles.js/)** 2.0.0 — Background particle effects
 
----
+## Features
 
-## Featured Projects
+- **Cyberpunk Aesthetic** — Scanline overlay, vignette, noise texture, hex-grid patterns, HUD corners
+- **Glitch Effects** — CSS pseudo-element glitch on headings and loader text
+- **Custom Cursor** — Dot + ring + red trail canvas (desktop only)
+- **Skull Loader** — SVG draw animation with scrolling warning messages and progress bar
+- **Typing Terminal** — `root@kishan:~$` prefix with rotating phrases
+- **Solar System Skills** — Orbiting planets with click-to-inspect popup
+- **3D Flip Project Cards** — Hover on desktop, tap on touch devices
+- **Bubble Assault Game** — Canvas game with 30s timer and skull targets
+- **Drag & Drop Quiz** — Match chemical compounds to names (touch-supported)
+- **Konami Code Easter Egg** — `↑↑↓↓←→←→BA` triggers a confetti modal
+- **Mascot Eyes** — Follow mouse cursor in real-time
+- **Responsive Design** — Three breakpoints: desktop (>900px), tablet (≤900px), mobile (≤600px)
+- **Reduced Motion** — Respects `prefers-reduced-motion` system preference
+- **Scroll Progress Bar** — Red gradient bar at top of viewport
 
-<p align="center">
-  <a href="https://github.com/kishan09k/-Tom-Jerry-Style-Portfolio">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=kishan09k&repo=-Tom-Jerry-Style-Portfolio&bg_color=0f0f0f&title_color=ffffff&text_color=b3b3b3&icon_color=ffffff&hide_border=true" />
-  </a>
-</p>
+## Setup
 
----
+1. Clone or copy the project into your web server directory:
+   ```
+   portfolio/
+   ├── index.html
+   ├── style.css
+   ├── script.js
+   ├── README.md
+   └── assets/
+       ├── models/
+       └── animations/
+   ```
 
-## GitHub Statistics
+2. Open in browser:
+   ```
+   http://localhost/portfolio/
+   ```
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=kishan09k&show_icons=true&hide_border=true&bg_color=0f0f0f&title_color=ffffff&text_color=b3b3b3&icon_color=ffffff" height="150"/>
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=kishan09k&hide_border=true&background=0f0f0f&ring=ffffff&fire=ffffff&currStreakLabel=ffffff&sideNums=b3b3b3&sideLabels=b3b3b3&dates=b3b3b3" height="150"/>
-</p>
+No build tools, no dependencies to install — all libraries load via CDN.
 
----
+## Responsive Breakpoints
 
-## Activity
+| Breakpoint | Behavior |
+|------------|----------|
+| **> 900px** | Full experience — custom cursor, all orbits, 3-column grids |
+| **≤ 900px** | Mobile nav overlay, hidden cursor/scanlines, 1-column layouts, reduced orbits |
+| **≤ 600px** | Compact spacing, stacked CTAs, minimal orbits, smaller solar system |
 
-<p align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=kishan09k&bg_color=0f0f0f&color=ffffff&line=ffffff&point=ffffff&hide_border=true" />
-</p>
+## Browser Support
 
----
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
-## Engineering Principles
+## License
 
-- Structure before scale  
-- Clarity before complexity  
-- Optimization before expansion  
-- Intelligence over imitation  
-
----
-
-## Contact
-
-Valsad, Gujarat, India  
-250190105025@gecv.ac.in  
-
-<p align="center">
-  <sub>Minimal • Structured • Performance-Oriented</sub>
-</p>
+© 2026 Kishan Goswami. All rights reserved.
