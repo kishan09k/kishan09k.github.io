@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aether — AI Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ee;
+    --bg-warm: #ede9e3;
+    --surface: rgba(255,253,250,0.72);
+    --surface-strong: rgba(255,253,250,0.92);
+    --border: rgba(180,165,148,0.18);
+    --border-med: rgba(180,165,148,0.28);
+    --copper: #b07850;
+    --copper-light: rgba(176,120,80,0.12);
+    --copper-glow: rgba(176,120,80,0.22);
+    --teal: #4a9b8e;
+    --teal-light: rgba(74,155,142,0.10);
+    --teal-pale: #d4eeea;
+    --blue: #5b8db8;
+    --blue-light: rgba(91,141,184,0.10);
+    --blue-pale: #d8e8f3;
+    --ink: #2a2520;
+    --ink-med: #5a5048;
+    --ink-soft: #9a8f85;
+    --ink-faint: rgba(42,37,32,0.06);
+    --sidebar-w: 240px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+    --radius-xl: 28px;
+    --shadow-xs: 0 1px 3px rgba(100,80,60,0.06), 0 1px 2px rgba(100,80,60,0.04);
+    --shadow-sm: 0 2px 8px rgba(100,80,60,0.08), 0 1px 3px rgba(100,80,60,0.06);
+    --shadow-md: 0 8px 24px rgba(100,80,60,0.10), 0 2px 6px rgba(100,80,60,0.07);
+    --shadow-float: 0 16px 48px rgba(100,80,60,0.13), 0 4px 12px rgba(100,80,60,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+  }
+
+  /* ── Ambient Background ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 20%, rgba(176,120,80,0.055) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 85% 80%, rgba(74,155,142,0.055) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 70% 15%, rgba(91,141,184,0.04) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: rgba(237,233,227,0.75);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 20px 0;
+    position: relative; z-index: 10;
+    flex-shrink: 0;
+    box-shadow: 1px 0 0 rgba(255,255,255,0.5), var(--shadow-xs);
+  }
+
+  .sidebar-logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 18px 0 20px;
+    margin-bottom: 24px;
+  }
+
+  .logo-mark {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, var(--copper) 0%, #c99060 100%);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(176,120,80,0.30);
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { width: 16px; height: 16px; }
+
+  .logo-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .sidebar-new-btn {
+    margin: 0 12px 20px;
+    padding: 9px 14px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border-med);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-med);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .sidebar-new-btn:hover {
+    background: white;
+    border-color: var(--copper);
+    color: var(--copper);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+
+  .sidebar-new-btn .plus {
+    width: 18px; height: 18px;
+    background: var(--copper-light);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--copper);
+    transition: background 0.2s;
+  }
+
+  .sidebar-new-btn:hover .plus { background: rgba(176,120,80,0.18); }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0 20px;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--ink-med);
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.18s ease;
+    position: relative;
+  }
+
+  .sidebar-item:hover {
+    background: rgba(255,255,255,0.55);
+    color: var(--ink);
+  }
+
+  .sidebar-item.active {
+    background: rgba(176,120,80,0.09);
+    color: var(--copper);
+    font-weight: 500;
+  }
+
+  .sidebar-item.active::before {
+    content: '';
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 2.5px; height: 60%;
+    background: var(--copper);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .sidebar-icon {
+    width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0;
+  }
+
+  .sidebar-item.active .sidebar-icon { opacity: 1; }
+
+  .sidebar-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin-left: auto; flex-shrink: 0;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 16px;
+  }
+
+  .sidebar-spacer { flex: 1; }
+
+  .sidebar-profile {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    margin: 0 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.18s;
+    border: 1px solid transparent;
+  }
+
+  .sidebar-profile:hover {
+    background: rgba(255,255,255,0.55);
+    border-color: var(--border);
+  }
+
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, #e8d5c0 0%, #c8b090 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 13px; color: var(--copper);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(176,120,80,0.20);
+  }
+
+  .profile-info { display: flex; flex-direction: column; gap: 1px; }
+  .profile-name { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+  .profile-plan {
+    font-size: 10.5px; color: var(--copper);
+    display: flex; align-items: center; gap: 3px;
+  }
+
+  /* ── Main Area ── */
+  .main {
+    flex: 1;
+    display: flex; flex-direction: column;
+    height: 100vh;
+    position: relative; z-index: 1;
+    overflow: hidden;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    display: flex; align-items: center;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(245,242,238,0.65);
+    backdrop-filter: blur(20px);
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .topbar-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    flex: 1;
+  }
+
+  .topbar-pills {
+    display: flex; gap: 6px;
+  }
+
+  .pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+  }
+
+  .pill:hover { color: var(--ink); border-color: var(--border-med); background: white; }
+
+  .pill.active {
+    background: var(--copper-light);
+    border-color: rgba(176,120,80,0.30);
+    color: var(--copper);
+  }
+
+  .topbar-actions { display: flex; gap: 6px; }
+
+  .icon-btn {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink-soft);
+    transition: all 0.18s;
+  }
+
+  .icon-btn:hover { background: white; border-color: var(--border-med); color: var(--ink); box-shadow: var(--shadow-xs); }
+
+  /* ── Messages ── */
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 40px 20px;
+    display: flex; flex-direction: column;
+    gap: 22px;
+    scroll-behavior: smooth;
+  }
+
+  .messages-wrap::-webkit-scrollbar { width: 5px; }
+  .messages-wrap::-webkit-scrollbar-track { background: transparent; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: rgba(180,165,148,0.3); border-radius: 3px; }
+
+  /* ── Message Rows ── */
+  .msg-row { display: flex; align-items: flex-start; gap: 14px; animation: msgIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-row:nth-child(1) { animation-delay: 0.05s; }
+  .msg-row:nth-child(2) { animation-delay: 0.15s; }
+  .msg-row:nth-child(3) { animation-delay: 0.25s; }
+  .msg-row:nth-child(4) { animation-delay: 0.35s; }
+  .msg-row:nth-child(5) { animation-delay: 0.45s; }
+
+  .msg-row.user-row { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-family: 'Fraunces', serif;
+  }
+
+  .msg-avatar.ai-av {
+    background: linear-gradient(135deg, rgba(176,120,80,0.18) 0%, rgba(74,155,142,0.18) 100%);
+    color: var(--copper); border: 1px solid rgba(176,120,80,0.20);
+    font-size: 13px;
+  }
+
+  .msg-avatar.user-av {
+    background: linear-gradient(135deg, #e8d5c0, #c8b090);
+    color: var(--copper); border: 1px solid rgba(176,120,80,0.25);
+  }
+
+  /* ── Bubble styles ── */
+  .msg-bubble {
+    max-width: 68%;
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .ai-bubble {
+    background: var(--surface-strong);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink);
+    border-top-left-radius: 4px;
+  }
+
+  .user-bubble {
+    background: linear-gradient(145deg, rgba(176,120,80,0.14) 0%, rgba(176,120,80,0.08) 100%);
+    border: 1px solid rgba(176,120,80,0.22);
+    color: var(--ink);
+    border-top-right-radius: 4px;
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* ── Rich AI message ── */
+  .rich-bubble {
+    max-width: 72%;
+    background: var(--surface-strong);
+    backdrop-filter: blur(24px) saturate(1.3);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-xl);
+    border-top-left-radius: 6px;
+    padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 16px;
+    animation: msgIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  }
+
+  .rich-bubble::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .bubble-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .bubble-header-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+  .bubble-header-dot.copper { background: var(--copper); }
+  .bubble-header-dot.blue { background: var(--blue); }
+
+  .bubble-text {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .bubble-text strong { font-weight: 500; color: var(--ink); }
+  .bubble-text em { font-style: italic; color: var(--ink-med); font-family: 'Fraunces', serif; }
+
+  /* Code block */
+  .code-block {
+    background: rgba(237,233,227,0.70);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.40);
+  }
+
+  .code-lang {
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--copper);
+    font-family: 'DM Mono', monospace;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .code-lang::before {
+    content: '';
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--copper);
+  }
+
+  .code-copy {
+    font-size: 11px; color: var(--ink-soft);
+    cursor: pointer; padding: 2px 8px;
+    border-radius: 4px; border: 1px solid var(--border);
+    background: transparent; font-family: 'DM Sans', sans-serif;
+    transition: all 0.18s;
+  }
+
+  .code-copy:hover { background: white; color: var(--ink); }
+
+  .code-body {
+    padding: 14px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--ink-med);
+    overflow-x: auto;
+  }
+
+  .code-body .kw { color: #7060a0; }
+  .code-body .fn { color: var(--teal); }
+  .code-body .str { color: #a05040; }
+  .code-body .cm { color: var(--ink-soft); font-style: italic; }
+  .code-body .num { color: var(--blue); }
+
+  /* Chart panel */
+  .chart-panel {
+    background: rgba(248,245,242,0.60);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+
+  .chart-title {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 14px;
+  }
+
+  .chart-bars {
+    display: flex; align-items: flex-end;
+    gap: 8px; height: 80px;
+  }
+
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+
+  .bar {
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    animation: barUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
+    min-height: 4px;
+  }
+
+  @keyframes barUp {
+    from { transform: scaleY(0); transform-origin: bottom; }
+    to   { transform: scaleY(1); transform-origin: bottom; }
+  }
+
+  .bar:nth-child(1) { animation-delay: 0.5s; }
+
+  .bar.teal { background: linear-gradient(to top, #4a9b8e, #72c4b8); }
+  .bar.copper { background: linear-gradient(to top, #b07850, #d4a070); }
+  .bar.blue { background: linear-gradient(to top, #5b8db8, #85b4d8); }
+  .bar.teal-light { background: linear-gradient(to top, rgba(74,155,142,0.35), rgba(74,155,142,0.55)); }
+
+  .bar-label { font-size: 10px; color: var(--ink-soft); font-family: 'DM Mono', monospace; }
+
+  .chart-legend {
+    display: flex; gap: 14px; margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-soft); }
+  .legend-dot { width: 6px; height: 6px; border-radius: 2px; }
+  .legend-dot.teal { background: var(--teal); }
+  .legend-dot.copper { background: var(--copper); }
+  .legend-dot.blue { background: var(--blue); }
+
+  /* Inline tags */
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11.5px; font-weight: 500;
+    margin: 0 2px;
+  }
+
+  .tag.teal { background: var(--teal-light); color: var(--teal); border: 1px solid rgba(74,155,142,0.20); }
+  .tag.copper { background: var(--copper-light); color: var(--copper); border: 1px solid rgba(176,120,80,0.22); }
+  .tag.blue { background: var(--blue-light); color: var(--blue); border: 1px solid rgba(91,141,184,0.20); }
+
+  /* Action buttons in bubble */
+  .bubble-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .bubble-action-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--ink-med);
+    cursor: pointer;
+    transition: all 0.18s;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .bubble-action-btn:hover {
+    border-color: var(--copper);
+    color: var(--copper);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+
+  .bubble-action-btn svg { width: 13px; height: 13px; }
+
+  /* ── Input Area ── */
+  .input-area {
+    padding: 16px 32px 20px;
+    background: rgba(245,242,238,0.55);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .suggestions-row {
+    display: flex; gap: 7px; margin-bottom: 10px; flex-wrap: wrap;
+    animation: fadeSugg 0.4s ease 0.3s both;
+  }
+
+  @keyframes fadeSugg {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .suggestion-chip {
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--ink-med);
+    border: 1px solid rgba(180,165,148,0.28);
+    background: rgba(255,253,250,0.80);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: all 0.20s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: var(--shadow-xs);
+    white-space: nowrap;
+  }
+
+  .suggestion-chip:hover {
+    background: white;
+    border-color: var(--copper);
+    color: var(--copper);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(176,120,80,0.15);
+  }
+
+  .omni-wrap {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,253,250,0.85);
+    backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid var(--border-med);
+    border-radius: var(--radius-xl);
+    padding: 10px 14px;
+    box-shadow: var(--shadow-sm), 0 0 0 0 rgba(176,120,80,0);
+    transition: all 0.25s ease;
+  }
+
+  .omni-wrap:focus-within {
+    border-color: rgba(176,120,80,0.45);
+    box-shadow: var(--shadow-md), 0 0 0 4px rgba(176,120,80,0.08), 0 0 28px rgba(176,120,80,0.10);
+    background: rgba(255,253,250,0.95);
+    animation: copperPulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes copperPulse {
+    0%,100% { box-shadow: var(--shadow-md), 0 0 0 4px rgba(176,120,80,0.07), 0 0 20px rgba(176,120,80,0.08); }
+    50%      { box-shadow: var(--shadow-md), 0 0 0 4px rgba(176,120,80,0.14), 0 0 36px rgba(176,120,80,0.14); }
+  }
+
+  .omni-icon { color: var(--ink-soft); flex-shrink: 0; }
+
+  .omni-input {
+    flex: 1;
+    border: none; outline: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .omni-input::placeholder { color: var(--ink-soft); }
+
+  .omni-tools { display: flex; gap: 6px; align-items: center; }
+
+  .omni-tool {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink-soft);
+    transition: all 0.18s;
+  }
+
+  .omni-tool:hover { background: var(--copper-light); border-color: rgba(176,120,80,0.30); color: var(--copper); }
+
+  .send-btn {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--copper) 0%, #c99060 100%);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(176,120,80,0.30);
+    color: white;
+    transition: all 0.20s cubic-bezier(0.22,1,0.36,1);
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow: 0 6px 18px rgba(176,120,80,0.40);
+  }
+
+  /* ── Status bar ── */
+  .statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 36px 0;
+    font-size: 11px; color: var(--ink-soft);
+  }
+
+  .status-left { display: flex; align-items: center; gap: 14px; }
+  .status-dot { display: flex; align-items: center; gap: 5px; }
+
+  .status-dot-anim {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  /* ── Typing indicator ── */
+  .typing-bubble {
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    border-top-left-radius: 4px;
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 5px;
+    box-shadow: var(--shadow-xs);
+    width: fit-content;
+  }
+
+  .typing-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--copper-light);
+    border: 1px solid var(--copper);
+    animation: typeDot 1.2s ease-in-out infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+  @keyframes typeDot {
+    0%,80%,100% { transform: scale(0.85); opacity: 0.5; }
+    40% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* ── Inline list ── */
+  .bubble-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .bubble-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13.5px; line-height: 1.6; color: var(--ink);
+  }
+
+  .list-bullet {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--copper); flex-shrink: 0; margin-top: 7px;
+  }
+
+  /* ── Scrollbar thin ── */
+  .messages-wrap { scrollbar-gutter: stable; }
+
+  /* ── Section divider ── */
+  .time-label {
+    text-align: center;
+    font-size: 11px; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .time-label::before, .time-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M8 2L10.5 6.5H5.5L8 2Z" fill="white" opacity="0.9"/>
+        <circle cx="8" cy="10" r="3.5" stroke="white" stroke-width="1.5" opacity="0.9"/>
+      </svg>
+    </div>
+    <span class="logo-name">Aether</span>
+  </div>
+
+  <button class="sidebar-new-btn">
+    <span class="plus">+</span>
+    New conversation
+  </button>
+
+  <div class="sidebar-section-label">Workspaces</div>
+
+  <div class="sidebar-item active">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor">
+      <rect x="2" y="3" width="12" height="1.5" rx="0.75"/>
+      <rect x="2" y="7" width="9" height="1.5" rx="0.75"/>
+      <rect x="2" y="11" width="11" height="1.5" rx="0.75"/>
+    </svg>
+    Research Hub
+    <span class="sidebar-dot"></span>
+  </div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    Code Review
+  </div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Personal
+  </div>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label" style="margin-top:2px">Recents</div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+      <path d="M13 2H3a1 1 0 00-1 1v9l3-2h8a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    ML model architecture
+  </div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+      <path d="M13 2H3a1 1 0 00-1 1v9l3-2h8a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    React hooks deep dive
+  </div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+      <path d="M13 2H3a1 1 0 00-1 1v9l3-2h8a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    Data pipeline analysis
+  </div>
+
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+      <path d="M13 2H3a1 1 0 00-1 1v9l3-2h8a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    System design notes
+  </div>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="sidebar-profile">
+    <div class="avatar">K</div>
+    <div class="profile-info">
+      <span class="profile-name">Kishan G.</span>
+      <span class="profile-plan">
+        <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><path d="M5 1l1.2 2.5L9 4l-2 1.9.5 2.6L5 7.2 2.5 8.5l.5-2.6L1 4l2.8-.5z"/></svg>
+        Pro Plan
+      </span>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <span class="topbar-title">Research Hub</span>
+    <div class="topbar-pills">
+      <button class="pill active">Chat</button>
+      <button class="pill">Code</button>
+      <button class="pill">Canvas</button>
+      <button class="pill">Data</button>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" title="Share">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="12.5" cy="3.5" r="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="3.5" cy="8" r="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="12.5" cy="12.5" r="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7.2l6-2.5M5 8.8l6 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-wrap">
+
+    <div class="time-label">Today, 2:14 PM</div>
+
+    <!-- User message 1 -->
+    <div class="msg-row user-row">
+      <div class="msg-avatar user-av">K</div>
+      <div class="msg-bubble user-bubble">
+        Can you explain transformer attention mechanisms and show me a minimal implementation in Python?
+      </div>
+    </div>
+
+    <!-- AI rich response -->
+    <div class="msg-row">
+      <div class="msg-avatar ai-av">✦</div>
+      <div class="rich-bubble" style="position:relative">
+        <div class="bubble-header">
+          <span class="bubble-header-dot"></span>
+          Analysis · Transformer Attention
+        </div>
+
+        <div class="bubble-text">
+          Attention is the mechanism that lets each token <em>attend</em> to all others, weighting their relevance. The core idea: project inputs into <span class="tag teal">Query</span> <span class="tag copper">Key</span> <span class="tag blue">Value</span> spaces, then compute scaled dot-product similarities.
+        </div>
+
+        <!-- Chart -->
+        <div class="chart-panel">
+          <div class="chart-title">Attention Score Distribution — 8 Heads</div>
+          <div class="chart-bars">
+            <div class="bar-group">
+              <div class="bar teal" style="height:72px;animation-delay:0.5s"></div>
+              <span class="bar-label">H1</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar copper" style="height:48px;animation-delay:0.55s"></div>
+              <span class="bar-label">H2</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar blue" style="height:60px;animation-delay:0.60s"></div>
+              <span class="bar-label">H3</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar teal-light" style="height:36px;animation-delay:0.65s"></div>
+              <span class="bar-label">H4</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar teal" style="height:55px;animation-delay:0.70s"></div>
+              <span class="bar-label">H5</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar copper" style="height:68px;animation-delay:0.75s"></div>
+              <span class="bar-label">H6</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar blue" style="height:40px;animation-delay:0.80s"></div>
+              <span class="bar-label">H7</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar teal" style="height:52px;animation-delay:0.85s"></div>
+              <span class="bar-label">H8</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot teal"></div> Semantic</div>
+            <div class="legend-item"><div class="legend-dot copper"></div> Positional</div>
+            <div class="legend-item"><div class="legend-dot blue"></div> Syntactic</div>
+          </div>
+        </div>
+
+        <!-- Code block -->
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Python · NumPy</span>
+            <button class="code-copy">Copy</button>
+          </div>
+          <div class="code-body"><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">scaled_dot_product_attention</span>(Q, K, V):
+    <span class="str">"""Minimal self-attention implementation."""</span>
+    d_k = Q.shape[<span class="num">-1</span>]
+    scores  = Q @ K.T / np.sqrt(d_k)     <span class="cm"># scale</span>
+    weights = <span class="fn">softmax</span>(scores, axis=<span class="num">-1</span>)  <span class="cm"># attend</span>
+    <span class="kw">return</span> weights @ V                    <span class="cm"># context</span>
+
+<span class="kw">def</span> <span class="fn">softmax</span>(x, axis=<span class="num">-1</span>):
+    e_x = np.<span class="fn">exp</span>(x - x.<span class="fn">max</span>(axis, keepdims=<span class="kw">True</span>))
+    <span class="kw">return</span> e_x / e_x.<span class="fn">sum</span>(axis, keepdims=<span class="kw">True</span>)</pre></div>
+        </div>
+
+        <div class="bubble-actions">
+          <button class="bubble-action-btn">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Run in sandbox
+          </button>
+          <button class="bubble-action-btn">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            Expand explanation
+          </button>
+          <button class="bubble-action-btn">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M4 8h8M4 5h5M4 11h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            Add to notes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User message 2 -->
+    <div class="msg-row user-row">
+      <div class="msg-avatar user-av">K</div>
+      <div class="msg-bubble user-bubble">
+        What are the key differences between MHA and GQA in modern LLMs?
+      </div>
+    </div>
+
+    <!-- AI simple response -->
+    <div class="msg-row">
+      <div class="msg-avatar ai-av">✦</div>
+      <div class="msg-bubble ai-bubble">
+        <div style="font-size:13px;font-weight:500;color:var(--ink-soft);margin-bottom:10px;letter-spacing:0.03em;text-transform:uppercase;font-size:10.5px;">Comparison · Attention Variants</div>
+        <ul class="bubble-list">
+          <li>
+            <span class="list-bullet"></span>
+            <span><span class="tag teal">MHA</span> — Multi-Head Attention: each head has its own Q, K, V projections. High expressivity, high memory cost.</span>
+          </li>
+          <li>
+            <span class="list-bullet"></span>
+            <span><span class="tag copper">GQA</span> — Grouped Query Attention: multiple query heads share K/V heads. Reduces KV-cache size dramatically — used in Llama 3, Mistral.</span>
+          </li>
+          <li>
+            <span class="list-bullet"></span>
+            <span><span class="tag blue">MQA</span> — Multi-Query Attention: extreme case of GQA with a single K/V head. Fastest inference, slight quality trade-off.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="msg-row">
+      <div class="msg-avatar ai-av">✦</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+  </div><!-- /messages-wrap -->
+
+  <!-- Input area -->
+  <div class="input-area">
+    <div class="suggestions-row">
+      <button class="suggestion-chip">How does RoPE positional encoding work?</button>
+      <button class="suggestion-chip">Compare FlashAttention variants</button>
+      <button class="suggestion-chip">Show me a full transformer block</button>
+      <button class="suggestion-chip">Explain KV-cache mechanics</button>
+    </div>
+
+    <div class="omni-wrap">
+      <svg class="omni-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <input class="omni-input" type="text" placeholder="Ask anything about AI, code, research…" />
+      <div class="omni-tools">
+        <button class="omni-tool" title="Attach file">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M12.5 8.5L7 14a4.5 4.5 0 01-6.4-6.3L7.1 1a3 3 0 014.2 4.2L5 11.7a1.5 1.5 0 01-2.1-2.1l5.6-5.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="omni-tool" title="Web search">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="omni-tool" title="Code mode">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 4L2 8l3 4M11 4l3 4-3 4M8 3l-1.5 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <button class="send-btn" title="Send">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <path d="M2 8h12M10 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="statusbar">
+      <div class="status-left">
+        <div class="status-dot">
+          <span class="status-dot-anim"></span>
+          Model active
+        </div>
+        <span>·</span>
+        <span>Context: 4.2k / 128k</span>
+      </div>
+      <span>Aether v2.1 · Research Mode</span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Copper pulse on click for send btn
+  document.querySelector('.send-btn').addEventListener('click', function(){
+    const input = document.querySelector('.omni-input');
+    if(input.value.trim()) input.value = '';
+  });
+
+  // Suggestion chips fill input
+  document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', function(){
+      document.querySelector('.omni-input').value = this.textContent;
+      document.querySelector('.omni-input').focus();
+    });
+  });
+
+  // Copy button feedback
+  document.querySelector('.code-copy').addEventListener('click', function(){
+    this.textContent = 'Copied!';
+    this.style.color = 'var(--teal)';
+    this.style.borderColor = 'var(--teal)';
+    setTimeout(() => {
+      this.textContent = 'Copy';
+      this.style.color = '';
+      this.style.borderColor = '';
+    }, 1800);
+  });
+</script>
+</body>
+</html>
