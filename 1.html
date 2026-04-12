@@ -1,250 +1,594 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V1K Elite</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-
-<style>
-:root{
-  --space-1:8px;
-  --space-2:16px;
-  --space-3:24px;
-  --space-4:32px;
-  --space-5:48px;
-  --space-6:64px;
-
-  --bg:#FAFAFA;
-  --text:#111;
-  --muted:#666;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
-}
-
-/* WEBGL CANVAS */
-#bg{
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:-1;
-}
-
-/* NAV */
-nav{
-  display:flex;
-  justify-content:space-between;
-  padding:var(--space-2) var(--space-4);
-  backdrop-filter:blur(12px);
-}
-
-.logo{font-weight:700;}
-
-.btn{
-  padding:12px 20px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#e0e7ff,#c7d2fe);
-  cursor:pointer;
-  transition:0.3s;
-}
-
-/* HERO */
-.hero{
-  text-align:center;
-  padding:var(--space-6) var(--space-3);
-}
-
-.hero h1{
-  font-size:clamp(36px,6vw,72px);
-}
-
-.gradient{
-  background:linear-gradient(90deg,#6366f1,#06b6d4);
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-/* BENTO */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:var(--space-3);
-  padding:var(--space-5);
-}
-
-.card{
-  background:white;
-  padding:var(--space-3);
-  border-radius:20px;
-  transition:transform 0.2s;
-  transform-style:preserve-3d;
-}
-
-/* CHAT DEMO */
-.demo{
-  max-width:700px;
-  margin:auto;
-  background:white;
-  padding:var(--space-3);
-  border-radius:20px;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  margin-top:10px;
-}
-
-/* CURSOR */
-.cursor{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:#6366f1;
-  position:fixed;
-  pointer-events:none;
-}
-</style>
-</head>
-
-<body>
-
-<canvas id="bg"></canvas>
-<div class="cursor"></div>
-
-<nav>
-  <div class="logo">∧ V1K</div>
-  <div class="btn magnet">Try Free →</div>
-</nav>
-
-<section class="hero">
-  <h1>AI that thinks <span class="gradient">with you.</span></h1>
-</section>
-
-<section class="grid">
-  <div class="card tilt">🧠 Hybrid Memory</div>
-  <div class="card tilt">⚡ Streaming</div>
-  <div class="card tilt">📊 Confidence</div>
-  <div class="card tilt">🔬 Custom Model</div>
-</section>
-
-<section class="demo">
-  <b>Ask V1K:</b>
-  <input id="input" placeholder="Type something..."/>
-  <p id="response"></p>
-</section>
-
-<script>
-
-/* ---------------- WEBGL PARTICLES ---------------- */
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-const renderer = new THREE.WebGLRenderer({canvas:document.getElementById("bg"),alpha:true});
-renderer.setSize(innerWidth,innerHeight);
-
-const geometry = new THREE.BufferGeometry();
-const vertices = [];
-
-for(let i=0;i<1000;i++){
-  vertices.push(
-    (Math.random()-0.5)*20,
-    (Math.random()-0.5)*20,
-    (Math.random()-0.5)*20
-  );
-}
-
-geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices,3));
-
-const material = new THREE.PointsMaterial({size:0.03});
-const points = new THREE.Points(geometry,material);
-scene.add(points);
-
-camera.position.z = 5;
-
-function animate(){
-  requestAnimationFrame(animate);
-  points.rotation.y += 0.0005;
-  renderer.render(scene,camera);
-}
-animate();
-
-/* ---------------- CURSOR ---------------- */
-const cursor = document.querySelector(".cursor");
-
-document.addEventListener("mousemove", e=>{
-  gsap.to(cursor,{
-    x:e.clientX,
-    y:e.clientY,
-    duration:0.2
-  });
-});
-
-/* ---------------- MAGNETIC BUTTON ---------------- */
-document.querySelectorAll(".magnet").forEach(btn=>{
-  btn.addEventListener("mousemove", e=>{
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width/2;
-    const y = e.clientY - rect.top - rect.height/2;
-
-    gsap.to(btn,{
-      x:x*0.2,
-      y:y*0.2
-    });
-  });
-
-  btn.addEventListener("mouseleave",()=>{
-    gsap.to(btn,{x:0,y:0});
-  });
-});
-
-/* ---------------- 3D TILT ---------------- */
-document.querySelectorAll(".tilt").forEach(card=>{
-  card.addEventListener("mousemove", e=>{
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left)/rect.width - 0.5;
-    const y = (e.clientY - rect.top)/rect.height - 0.5;
-
-    gsap.to(card,{
-      rotationY:x*10,
-      rotationX:-y*10,
-      transformPerspective:500
-    });
-  });
-
-  card.addEventListener("mouseleave",()=>{
-    gsap.to(card,{rotationX:0,rotationY:0});
-  });
-});
-
-/* ---------------- REAL DEMO ---------------- */
-document.getElementById("input").addEventListener("keypress", e=>{
-  if(e.key === "Enter"){
-    const val = e.target.value;
-    const res = document.getElementById("response");
-
-    res.innerHTML = "Thinking...";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V1K | Next-Gen Conversational Intelligence</title>
     
-    setTimeout(()=>{
-      res.innerHTML = "def factorial(n): return 1 if n==0 else n*factorial(n-1)";
-    },800);
-  }
-});
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6', // Soft Teal
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        },
+                        surface: '#FAFAFA'
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.04)',
+                        'float': '0 20px 50px -20px rgba(0,0,0,0.08)',
+                        'glow': '0 0 20px rgba(20, 184, 166, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
 
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
+    <style>
+        body {
+            background-color: #FAFAFA;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Ambient Background Gradient */
+        .ambient-bg {
+            position: absolute;
+            top: -10%; left: -10%; width: 120%; height: 120%;
+            background: radial-gradient(circle at 50% 0%, rgba(20, 184, 166, 0.05) 0%, rgba(250, 250, 250, 0) 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Light Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Infinite Marquee */
+        .marquee-wrapper {
+            display: flex;
+            width: max-content;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            to { transform: translateX(-50%); }
+        }
+
+        /* Custom Cursor for Typing Effect */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+            color: #14b8a6;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Bento Box Hover Effects */
+        .bento-card {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06);
+        }
+
+        /* Magnetic Button Wrapper */
+        .magnetic-wrap { display: inline-block; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <div class="ambient-bg"></div>
+
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12" id="navbar">
+        <div class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex justify-between items-center shadow-sm">
+            <a href="#" class="text-xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
+                <span class="text-brand-500 text-2xl font-light">∧</span> V1K
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                <a href="#platform" class="hover:text-slate-900 transition-colors">Platform</a>
+                <a href="#modes" class="hover:text-slate-900 transition-colors">Modes</a>
+                <a href="#features" class="hover:text-slate-900 transition-colors">Features</a>
+                <a href="#pricing" class="hover:text-slate-900 transition-colors">Pricing</a>
+                <a href="#about" class="hover:text-slate-900 transition-colors">About</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-5">
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Sign In</a>
+                <div class="magnetic-wrap" id="nav-cta">
+                    <a href="#" class="bg-gradient-to-b from-brand-500 to-brand-600 text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all flex items-center gap-2">
+                        Try V1K Free <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <button class="md:hidden text-slate-600">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="relative pt-40 pb-20 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div class="hero-elem inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600 mb-8">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            ∧V1K-7B · 163 Memories · Live
+        </div>
+
+        <h1 class="hero-elem text-5xl md:text-7xl font-bold tracking-tight text-slate-900 mb-6 max-w-4xl leading-[1.1]">
+            AI that thinks <br class="hidden md:block"/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-blue-500">with you.</span>
+        </h1>
+
+        <p class="hero-elem text-lg md:text-xl text-slate-500 max-w-2xl mb-10 font-light">
+            Next-generation conversational intelligence with hybrid memory, multimodal reasoning, and contextual depth — <strong class="font-medium text-slate-700">built for engineers.</strong>
+        </p>
+
+        <div class="hero-elem flex flex-col sm:flex-row gap-4 mb-16">
+            <a href="#platform" class="bg-slate-900 text-white px-8 py-4 rounded-full font-medium hover:bg-slate-800 transition-all shadow-float flex items-center justify-center gap-2">
+                Experience V1K <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#pricing" class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-medium hover:bg-slate-50 transition-all flex items-center justify-center">
+                View Plans
+            </a>
+        </div>
+
+        <div class="hero-elem flex flex-wrap justify-center gap-3">
+            <span class="px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100 text-sm font-medium text-slate-600 flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4 text-brand-500"></i> Chat Mode</span>
+            <span class="px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100 text-sm font-medium text-slate-600 flex items-center gap-2"><i data-lucide="code" class="w-4 h-4 text-brand-500"></i> Code Mode</span>
+            <span class="px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100 text-sm font-medium text-slate-600 flex items-center gap-2"><i data-lucide="image" class="w-4 h-4 text-brand-500"></i> Image Mode</span>
+            <span class="px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100 text-sm font-medium text-slate-600 flex items-center gap-2"><i data-lucide="video" class="w-4 h-4 text-brand-500"></i> Video Mode</span>
+        </div>
+    </section>
+
+    <section class="py-10 border-y border-slate-100 bg-white/50 overflow-hidden reveal">
+        <div class="marquee-wrapper text-slate-400 font-medium text-sm tracking-widest uppercase flex gap-12 items-center">
+            <div class="marquee-content flex gap-12 items-center whitespace-nowrap">
+                <span>ChromaDB</span> • <span>RAG Pipeline</span> • <span>Real-time Streaming</span> • <span>Confidence Scoring</span> • <span>GTU Curriculum</span> • <span>SPPU Syllabus</span> • <span>VTU Resources</span> • <span>GATE Prep</span> • <span>Hybrid Memory</span> • <span>Fine-tuned 7B</span> • <span>150+ Examples</span> • <span>Study Mode</span> •
+            </div>
+            <div class="marquee-content flex gap-12 items-center whitespace-nowrap">
+                <span>ChromaDB</span> • <span>RAG Pipeline</span> • <span>Real-time Streaming</span> • <span>Confidence Scoring</span> • <span>GTU Curriculum</span> • <span>SPPU Syllabus</span> • <span>VTU Resources</span> • <span>GATE Prep</span> • <span>Hybrid Memory</span> • <span>Fine-tuned 7B</span> • <span>150+ Examples</span> • <span>Study Mode</span> •
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-7xl mx-auto reveal">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
+            <div>
+                <div class="text-4xl font-bold text-slate-900 mb-2"><span class="counter" data-target="163">0</span>+</div>
+                <div class="text-sm text-slate-500">Contextual Memories</div>
+            </div>
+            <div>
+                <div class="text-4xl font-bold text-slate-900 mb-2"><span class="counter" data-target="4">0</span>x</div>
+                <div class="text-sm text-slate-500">AI Modes</div>
+            </div>
+            <div>
+                <div class="text-4xl font-bold text-slate-900 mb-2"><span class="counter" data-target="7">0</span>B</div>
+                <div class="text-sm text-slate-500">Parameter Model</div>
+            </div>
+            <div>
+                <div class="text-4xl font-bold text-slate-900 mb-2"><span class="counter" data-target="150">0</span>+</div>
+                <div class="text-sm text-slate-500">Training Examples</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="platform" class="py-24 px-6 md:px-12 max-w-7xl mx-auto reveal">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">Built different. Designed for depth.</h2>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto">V1K is not a wrapper. Full-stack AI built from scratch — sovereign intelligence, contextual memory, multimodal reasoning.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bento-card md:col-span-2 bg-white rounded-3xl p-8 border border-slate-100 shadow-soft relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-50 rounded-full blur-3xl -mr-20 -mt-20 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <i data-lucide="brain-circuit" class="w-8 h-8 text-brand-500 mb-6 relative z-10"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-3 relative z-10">Hybrid Memory</h3>
+                <p class="text-slate-500 relative z-10">ChromaDB + RAG architecture ensures persistent contextual recall across all your engineering sessions.</p>
+            </div>
+            <div class="bento-card bg-white rounded-3xl p-8 border border-slate-100 shadow-soft">
+                <i data-lucide="zap" class="w-8 h-8 text-yellow-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Live Streaming</h3>
+                <p class="text-slate-500">Butter-smooth, token-level streaming responses for zero-latency interactions.</p>
+            </div>
+            <div class="bento-card bg-white rounded-3xl p-8 border border-slate-100 shadow-soft">
+                <i data-lucide="bar-chart-2" class="w-8 h-8 text-blue-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Confidence Score</h3>
+                <p class="text-slate-500">Answers are rated for epistemic reliability, so you know when to trust the code.</p>
+            </div>
+            <div class="bento-card md:col-span-2 bg-white rounded-3xl p-8 border border-slate-100 shadow-soft">
+                <i data-lucide="cpu" class="w-8 h-8 text-indigo-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Custom 7B Model</h3>
+                <p class="text-slate-500">Fine-tuned natively on 150+ high-complexity engineering examples and syllabi.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="modes" class="py-24 px-6 md:px-12 bg-white border-y border-slate-100 reveal">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Four modes. <br/><span class="text-slate-400">One intelligence.</span></h2>
+                <div class="space-y-6 mt-10">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center flex-shrink-0"><i data-lucide="message-square" class="w-5 h-5 text-brand-600"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Chat Mode</h4>
+                            <p class="text-sm text-slate-500">General purpose conversational intelligence.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0"><i data-lucide="code" class="w-5 h-5 text-slate-600"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Code Mode</h4>
+                            <p class="text-sm text-slate-500">Syntax highlighted, logically verified code generation.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0"><i data-lucide="image" class="w-5 h-5 text-slate-600"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Image Mode</h4>
+                            <p class="text-sm text-slate-500">High-fidelity diagram and image synthesis.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0"><i data-lucide="video" class="w-5 h-5 text-slate-600"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Video Mode</h4>
+                            <p class="text-sm text-slate-500">AI-generated conceptual video explanations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#FAFAFA] rounded-2xl border border-slate-200 shadow-float overflow-hidden flex flex-col h-[400px]">
+                <div class="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                    <div class="mx-auto text-xs font-medium text-slate-400">V1K Code Mode</div>
+                </div>
+                <div class="p-6 flex-1 overflow-y-auto space-y-6 text-sm">
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0"></div>
+                        <div class="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-tl-none px-4 py-3 text-slate-700">
+                            Explain recursion with a Python example.
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold flex-shrink-0">∧</div>
+                        <div class="w-full">
+                            <div class="text-slate-700 mb-3">Recursion occurs when a function calls itself. Here is a simple factorial example:</div>
+                            <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-green-400 overflow-x-auto shadow-inner">
+                                <span id="typewriter" class="typing-cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-24 px-6 md:px-12 max-w-7xl mx-auto reveal">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Engineering intelligence, at its finest.</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="flex items-start gap-4">
+                <i data-lucide="book-open" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Study Mode</h4>
+                    <p class="text-slate-500 mt-1">Optimized for GTU, SPPU, VTU, and GATE syllabi.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i data-lucide="database" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Hybrid Memory</h4>
+                    <p class="text-slate-500 mt-1">Recalls previous conversations seamlessly.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i data-lucide="activity" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Streaming Responses</h4>
+                    <p class="text-slate-500 mt-1">Real-time token generation for fast reading.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i data-lucide="layers" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Tiered Access</h4>
+                    <p class="text-slate-500 mt-1">Scalable infrastructure from students to enterprise.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i data-lucide="check-circle" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Confidence Scoring</h4>
+                    <p class="text-slate-500 mt-1">Built-in hallucination mitigation.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i data-lucide="code-2" class="w-6 h-6 text-brand-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-lg">Built from Scratch</h4>
+                    <p class="text-slate-500 mt-1">Engineered independently by Goswami Kishan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-24 px-6 md:px-12 bg-slate-50 reveal">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Simple, transparent pricing.</h2>
+                <div class="flex items-center justify-center gap-3 text-sm font-medium">
+                    <span class="text-slate-500" id="monthly-label">Monthly</span>
+                    <button id="billing-toggle" class="w-12 h-6 bg-brand-500 rounded-full relative transition-colors">
+                        <span class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform transform translate-x-6"></span>
+                    </button>
+                    <span class="text-slate-900" id="yearly-label">Yearly <span class="text-brand-600 text-xs bg-brand-50 px-2 py-0.5 rounded-full ml-1">-20%</span></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Free</h3>
+                    <div class="text-3xl font-bold text-slate-900 mb-6">$0<span class="text-sm text-slate-500 font-normal">/mo</span></div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Text conversations</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> 5 daily requests</li>
+                        <li class="flex items-center gap-2 opacity-40"><i data-lucide="minus" class="w-4 h-4"></i> No code generation</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-slate-200 font-medium text-slate-700 hover:bg-slate-50 transition-colors">Get Started</button>
+                </div>
+                <div class="bg-white rounded-3xl p-8 border-2 border-brand-500 shadow-float relative transform lg:-translate-y-4">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Most Popular</div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Pro</h3>
+                    <div class="text-3xl font-bold text-slate-900 mb-6 price-tag" data-monthly="$9.99" data-yearly="$7.99">$7.99<span class="text-sm text-slate-500 font-normal">/mo</span></div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Unlimited convos</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Code generation</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> 100 images/mo</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Video (240p)</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/25">Upgrade to Pro</button>
+                </div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Premium</h3>
+                    <div class="text-3xl font-bold text-slate-900 mb-6 price-tag" data-monthly="$24.99" data-yearly="$19.99">$19.99<span class="text-sm text-slate-500 font-normal">/mo</span></div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> 4K Image Generation</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> 1080p Video</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Team seats (up to 5)</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-slate-200 font-medium text-slate-700 hover:bg-slate-50 transition-colors">Choose Premium</button>
+                </div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Enterprise</h3>
+                    <div class="text-3xl font-bold text-slate-900 mb-6">Custom</div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Unlimited everything</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> 99.9% SLA</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500"></i> Custom integration</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-7xl mx-auto border-b border-slate-100 reveal text-center">
+        <h3 class="text-sm font-bold tracking-widest uppercase text-slate-400 mb-8">Enterprise Security & Deployment</h3>
+        <div class="flex flex-wrap justify-center gap-8 md:gap-16 items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+            <div class="flex items-center gap-2 font-medium text-slate-700"><i data-lucide="lock" class="w-5 h-5 text-slate-900"></i> E2E Encryption</div>
+            <div class="flex items-center gap-2 font-medium text-slate-700"><i data-lucide="shield-off" class="w-5 h-5 text-slate-900"></i> Zero Data Retention</div>
+            <div class="flex items-center gap-2 font-medium text-slate-700"><i data-lucide="cloud" class="w-5 h-5 text-slate-900"></i> Cloud Native</div>
+            <div class="flex items-center gap-2 font-medium text-slate-700"><i data-lucide="server" class="w-5 h-5 text-slate-900"></i> Local Stack (XAMPP/MySQL)</div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 reveal">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="flex justify-center gap-1 mb-6 text-yellow-400">
+                <i data-lucide="star" class="fill-current w-5 h-5"></i>
+                <i data-lucide="star" class="fill-current w-5 h-5"></i>
+                <i data-lucide="star" class="fill-current w-5 h-5"></i>
+                <i data-lucide="star" class="fill-current w-5 h-5"></i>
+                <i data-lucide="star" class="fill-current w-5 h-5"></i>
+            </div>
+            <blockquote class="text-2xl md:text-4xl font-medium text-slate-900 mb-8 leading-tight">
+                "V1K doesn't just answer questions — it understands them. It's like having a senior engineer who knows exactly what I'm studying."
+            </blockquote>
+            <cite class="not-italic text-slate-500 flex flex-col items-center">
+                <span class="font-bold text-slate-900">Riya Sharma</span>
+                <span class="text-sm mt-1">B.E. Computer Engineering, GTU</span>
+            </cite>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-slate-100 pt-24 pb-8 px-6 md:px-12 mt-12">
+        <div class="max-w-7xl mx-auto text-center mb-20 reveal">
+            <h2 class="text-4xl md:text-6xl font-bold text-slate-900 mb-8 tracking-tight">Build smarter. Learn deeper.</h2>
+            <a href="#pricing" class="inline-flex bg-slate-900 text-white px-8 py-4 rounded-full font-medium hover:bg-slate-800 transition-all shadow-float items-center gap-2">
+                Start Using V1K <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-t border-slate-100 pt-8 text-sm text-slate-500">
+            <div class="flex items-center gap-2">
+                <span class="text-brand-500 font-bold text-lg">∧</span> 
+                <span>&copy; 2025 V1K. All rights reserved.</span>
+            </div>
+            
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-slate-900 transition-colors">Platform</a>
+                <a href="#" class="hover:text-slate-900 transition-colors">Company</a>
+                <a href="#" class="hover:text-slate-900 transition-colors">Legal</a>
+            </div>
+
+            <div class="font-medium text-slate-600">
+                Developed by <span class="text-slate-900">Goswami Kishan</span> · Made in India 🇮🇳
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // 1. Initial Load Animations (Hero Section)
+        gsap.from(".hero-elem", {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            delay: 0.2
+        });
+
+        // 2. Scroll Reveals
+        gsap.utils.toArray('.reveal').forEach(section => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 85%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // 3. Navbar Blur Effect on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-2');
+            }
+        });
+
+        // 4. Magnetic Button Hover Effect for Top CTA
+        const magneticWrap = document.getElementById('nav-cta');
+        const magneticBtn = magneticWrap.querySelector('a');
+
+        magneticWrap.addEventListener('mousemove', (e) => {
+            const rect = magneticWrap.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            gsap.to(magneticBtn, {
+                x: x * 0.3,
+                y: y * 0.3,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+
+        magneticWrap.addEventListener('mouseleave', () => {
+            gsap.to(magneticBtn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+
+        // 5. Counting Stats Animation on Scroll
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 90%",
+                once: true,
+                onEnter: () => {
+                    const target = +counter.getAttribute('data-target');
+                    gsap.to(counter, {
+                        innerHTML: target,
+                        duration: 2,
+                        snap: { innerHTML: 1 },
+                        ease: "power2.out"
+                    });
+                }
+            });
+        });
+
+        // 6. Pricing Toggle Logic
+        let isYearly = true;
+        const toggleBtn = document.getElementById('billing-toggle');
+        const toggleKnob = toggleBtn.querySelector('span');
+        const priceTags = document.querySelectorAll('.price-tag');
+        const monthlyLabel = document.getElementById('monthly-label');
+        const yearlyLabel = document.getElementById('yearly-label');
+
+        toggleBtn.addEventListener('click', () => {
+            isYearly = !isYearly;
+            
+            if(isYearly) {
+                toggleKnob.classList.add('translate-x-6');
+                toggleKnob.classList.remove('translate-x-1');
+                monthlyLabel.classList.replace('text-slate-900', 'text-slate-500');
+                yearlyLabel.classList.replace('text-slate-500', 'text-slate-900');
+            } else {
+                toggleKnob.classList.add('translate-x-1');
+                toggleKnob.classList.remove('translate-x-6');
+                monthlyLabel.classList.replace('text-slate-500', 'text-slate-900');
+                yearlyLabel.classList.replace('text-slate-900', 'text-slate-500');
+            }
+
+            priceTags.forEach(tag => {
+                const newPrice = isYearly ? tag.getAttribute('data-yearly') : tag.getAttribute('data-monthly');
+                // Animate price change
+                gsap.to(tag, {
+                    opacity: 0, y: -10, duration: 0.2, onComplete: () => {
+                        tag.innerHTML = `${newPrice}<span class="text-sm text-slate-500 font-normal">/mo</span>`;
+                        gsap.to(tag, { opacity: 1, y: 0, duration: 0.2 });
+                    }
+                });
+            });
+        });
+
+        // 7. Mock Chat Typing Animation
+        const codeString = `def factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n-1)`;
+        const typewriterSpan = document.getElementById('typewriter');
+        
+        ScrollTrigger.create({
+            trigger: "#modes",
+            start: "top 60%",
+            once: true,
+            onEnter: () => {
+                let i = 0;
+                function typeWriter() {
+                    if (i < codeString.length) {
+                        typewriterSpan.innerHTML = codeString.substring(0, i+1).replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
+                        i++;
+                        setTimeout(typeWriter, Math.random() * 50 + 20); // Random typing speed
+                    }
+                }
+                setTimeout(typeWriter, 500); // Delay before typing starts
+            }
+        });
+    </script>
 </body>
 </html>
