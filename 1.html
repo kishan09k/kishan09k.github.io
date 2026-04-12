@@ -1,223 +1,603 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Search | The Future of Search</title>
+    <title>V1K | Next-Gen AI Platform</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6', // Soft sophisticated teal
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        },
+                        surface: '#FAFAFA', // Soft off-white background
+                    },
                     boxShadow: {
-                        'search': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'search-focus': '0 8px 30px -4px rgba(59, 130, 246, 0.15)'
+                        'soft': '0 20px 40px -15px rgba(0,0,0,0.05)',
+                        'float': '0 30px 60px -15px rgba(0,0,0,0.08)',
+                        'inner-light': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.8)',
                     }
                 }
             }
         }
     </script>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         body {
-            background-color: #FFFFFF;
-            color: #1f2937;
+            background-color: #FAFAFA;
+            color: #111827;
             overflow-x: hidden;
         }
         
-        /* Smooth transitions for hiding/showing views */
-        .fade-enter {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease-out;
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        .fade-enter-active {
-            opacity: 1;
-            transform: translateY(0);
+
+        /* Ambient Background Gradient */
+        .ambient-bg {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 50% 0%, rgba(20, 184, 166, 0.05) 0%, rgba(250, 250, 250, 0) 60%);
+            z-index: -1;
+            pointer-events: none;
         }
+
+        /* Infinite Marquee */
+        .marquee-container {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            gap: 2rem;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .marquee-content {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-around;
+            gap: 2rem;
+            animation: scroll 30s linear infinite;
+        }
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-100% - 2rem)); }
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #111827 0%, #14b8a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Micro-interactions */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.08);
+        }
+        
+        /* Cursor Blinker for Chat */
+        .blinking-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background-color: #14b8a6;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col">
+<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
 
-    <nav class="flex justify-end p-4 md:px-8 items-center gap-4 text-sm font-medium text-gray-600">
-        <a href="#" class="hover:text-gray-900 transition-colors">Images</a>
-        <a href="#" class="hover:text-gray-900 transition-colors">Mail</a>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors shadow-sm">Sign In</button>
+    <nav class="fixed w-full top-0 z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold tracking-tighter flex items-center gap-1">
+                <span class="text-brand-500">∧</span> V1K
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
+                <a href="#platform" class="hover:text-gray-900 transition-colors">Platform</a>
+                <a href="#modes" class="hover:text-gray-900 transition-colors">Modes</a>
+                <a href="#why" class="hover:text-gray-900 transition-colors">Features</a>
+                <a href="#pricing" class="hover:text-gray-900 transition-colors">Pricing</a>
+                <a href="#" class="hover:text-gray-900 transition-colors">About</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Sign In</a>
+                <a href="#pricing" class="bg-gray-900 text-white px-5 py-2.5 rounded-full hover-lift shadow-soft border border-gray-800 hover:bg-gray-800 transition-all">
+                    Try V1K Free &rarr;
+                </a>
+            </div>
+
+            <button class="md:hidden text-gray-900 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
     </nav>
 
-    <main id="home-view" class="flex-1 flex flex-col items-center justify-center px-4 -mt-20 fade-enter fade-enter-active">
+    <section class="relative pt-40 pb-20 px-6 overflow-hidden min-h-[90vh] flex flex-col justify-center items-center text-center">
+        <div class="ambient-bg"></div>
         
-        <h1 class="text-6xl font-bold tracking-tighter mb-8 text-gray-900 flex items-center gap-1">
-            <span class="text-blue-600">N</span>
-            <span class="text-red-500">e</span>
-            <span class="text-yellow-500">x</span>
-            <span class="text-blue-600">u</span>
-            <span class="text-green-500">s</span>
+        <div class="gsap-hero-elem inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs font-medium text-gray-600 mb-8 border border-gray-200 shadow-sm">
+            <span class="text-brand-500 font-bold">∧V1K-7B</span>
+            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+            <span>163 Memories</span>
+            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+            <span class="flex items-center gap-1 text-green-600"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Live</span>
+        </div>
+
+        <h1 class="gsap-hero-elem text-6xl md:text-8xl font-bold tracking-tighter text-gray-900 mb-6 leading-tight max-w-5xl">
+            AI that thinks <br/> <span class="text-gradient">with you.</span>
         </h1>
 
-        <div class="w-full max-w-2xl relative group">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i data-lucide="search" class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
-            </div>
-            
-            <input 
-                type="text" 
-                id="search-input"
-                class="w-full pl-12 pr-12 py-4 rounded-full border border-gray-200 shadow-search hover:shadow-search-focus focus:shadow-search-focus focus:border-blue-200 outline-none transition-all text-lg"
-                placeholder="Search the web or type a URL..."
-                autocomplete="off"
-            >
-            
-            <div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hover:bg-gray-100 rounded-full my-2 mr-2 px-2 transition-colors">
-                <i data-lucide="mic" class="w-5 h-5 text-blue-500"></i>
-            </div>
-        </div>
+        <p class="gsap-hero-elem text-lg md:text-xl text-gray-500 max-w-2xl mb-10 font-light leading-relaxed">
+            Next-generation conversational intelligence with hybrid memory, multimodal reasoning, and contextual depth — built explicitly for engineers.
+        </p>
 
-        <div class="mt-8 flex gap-4">
-            <button id="search-btn" class="bg-gray-50 border border-gray-100 text-gray-700 px-6 py-2.5 rounded-md text-sm hover:border-gray-300 hover:shadow-sm transition-all">
-                Nexus Search
+        <div class="gsap-hero-elem flex flex-col sm:flex-row gap-4 mb-16 z-10">
+            <button class="bg-gray-900 text-white px-8 py-4 rounded-full text-base font-medium hover-lift shadow-float">
+                Experience V1K &rarr;
             </button>
-            <button class="bg-gray-50 border border-gray-100 text-gray-700 px-6 py-2.5 rounded-md text-sm hover:border-gray-300 hover:shadow-sm transition-all">
-                I'm Feeling Lucky
+            <button class="glass text-gray-900 px-8 py-4 rounded-full text-base font-medium hover-lift transition-all hover:bg-gray-50">
+                View Plans
             </button>
         </div>
-    </main>
 
-    <div id="results-view" class="hidden flex-1 flex-col w-full">
-        <header class="flex items-center gap-8 px-6 py-4 border-b border-gray-100 bg-white">
-            <h2 class="text-2xl font-bold tracking-tighter text-gray-900">
-                <span class="text-blue-600">N</span><span class="text-red-500">e</span><span class="text-yellow-500">x</span><span class="text-blue-600">u</span><span class="text-green-500">s</span>
-            </h2>
+        <div class="gsap-hero-elem flex flex-wrap justify-center gap-3">
+            <span class="px-4 py-2 rounded-full bg-white shadow-sm border border-gray-100 text-sm font-medium text-gray-600 hover-lift cursor-default">💬 Chat Mode</span>
+            <span class="px-4 py-2 rounded-full bg-white shadow-sm border border-gray-100 text-sm font-medium text-gray-600 hover-lift cursor-default">⌨️ Code Mode</span>
+            <span class="px-4 py-2 rounded-full bg-white shadow-sm border border-gray-100 text-sm font-medium text-gray-600 hover-lift cursor-default">🖼️ Image Mode</span>
+            <span class="px-4 py-2 rounded-full bg-white shadow-sm border border-gray-100 text-sm font-medium text-gray-600 hover-lift cursor-default">🎬 Video Mode</span>
+        </div>
+    </section>
+
+    <section class="py-10 border-y border-gray-100 bg-white/50">
+        <div class="marquee-container max-w-7xl mx-auto">
+            <div class="marquee-content text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                <span>ChromaDB</span> • <span>RAG Pipeline</span> • <span>Real-time Streaming</span> • <span>Confidence Scoring</span> • <span>GTU Curriculum</span> • <span>SPPU Syllabus</span> • <span>VTU Resources</span> • <span>GATE Prep</span> • <span>Hybrid Memory</span> • <span>Fine-tuned 7B</span> • <span>150+ Examples</span> • <span>Study Mode</span>
+            </div>
+            <div class="marquee-content text-sm font-semibold text-gray-400 tracking-wider uppercase" aria-hidden="true">
+                <span>ChromaDB</span> • <span>RAG Pipeline</span> • <span>Real-time Streaming</span> • <span>Confidence Scoring</span> • <span>GTU Curriculum</span> • <span>SPPU Syllabus</span> • <span>VTU Resources</span> • <span>GATE Prep</span> • <span>Hybrid Memory</span> • <span>Fine-tuned 7B</span> • <span>150+ Examples</span> • <span>Study Mode</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-7xl mx-auto" id="stats">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
+            <div class="gsap-stat">
+                <div class="text-4xl font-bold text-gray-900 mb-2"><span class="counter" data-target="163">0</span>+</div>
+                <div class="text-sm text-gray-500 font-medium">Contextual Memories</div>
+            </div>
+            <div class="gsap-stat">
+                <div class="text-4xl font-bold text-gray-900 mb-2"><span class="counter" data-target="4">0</span>x</div>
+                <div class="text-sm text-gray-500 font-medium">AI Modes</div>
+            </div>
+            <div class="gsap-stat">
+                <div class="text-4xl font-bold text-gray-900 mb-2"><span class="counter" data-target="7">0</span>B</div>
+                <div class="text-sm text-gray-500 font-medium">Parameter Model</div>
+            </div>
+            <div class="gsap-stat">
+                <div class="text-4xl font-bold text-gray-900 mb-2"><span class="counter" data-target="150">0</span>+</div>
+                <div class="text-sm text-gray-500 font-medium">Training Examples</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-white" id="platform">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-4xl font-bold tracking-tight text-gray-900 mb-4">Built different. Designed for depth.</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto text-lg">V1K is not a wrapper. It is full-stack AI built from scratch — offering sovereign intelligence, persistent memory, and multimodal reasoning.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="gsap-bento bg-[#FAFAFA] rounded-3xl p-8 border border-gray-100 shadow-soft hover-lift">
+                    <div class="text-3xl mb-4">🧠</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Hybrid Memory</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">ChromaDB + RAG integration for persistent, contextual recall across sessions.</p>
+                </div>
+                <div class="gsap-bento bg-[#FAFAFA] rounded-3xl p-8 border border-gray-100 shadow-soft hover-lift lg:col-span-2">
+                    <div class="text-3xl mb-4">⚡</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Live Streaming</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed max-w-md">Experience zero-latency thoughts. Token-level streaming responses ensure you see the model's reasoning in absolute real-time.</p>
+                    <div class="mt-6 h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-brand-500 w-2/3 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                <div class="gsap-bento bg-[#FAFAFA] rounded-3xl p-8 border border-gray-100 shadow-soft hover-lift">
+                    <div class="text-3xl mb-4">📊</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Confidence Score</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Every technical answer is rated for epistemic reliability before it reaches you.</p>
+                </div>
+                <div class="gsap-bento bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 border border-gray-800 shadow-float hover-lift lg:col-span-4 text-white flex flex-col md:flex-row items-center justify-between">
+                    <div class="max-w-xl mb-6 md:mb-0">
+                        <div class="text-3xl mb-4">🔬</div>
+                        <h3 class="text-2xl font-semibold mb-2">Custom Engineering Model</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">Fine-tuned on over 150+ complex engineering examples. Optimized specifically for code generation, architectural patterns, and deep algorithmic thinking.</p>
+                    </div>
+                    <div class="px-6 py-3 bg-white/10 rounded-full border border-white/20 backdrop-blur-md">
+                        <span class="font-mono text-sm">Base: LLaMA-2 / Fine-tune: V1K-Eng</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6" id="modes">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-center">
             
-            <div class="flex-1 max-w-3xl relative">
-                <input 
-                    type="text" 
-                    id="results-search-input"
-                    class="w-full pl-4 pr-12 py-2.5 rounded-full border border-gray-200 shadow-sm focus:shadow-search-focus outline-none transition-all"
-                >
-                <button id="close-results" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+            <div class="lg:w-1/2 gsap-fade-right">
+                <h2 class="text-4xl font-bold tracking-tight text-gray-900 mb-6">Four modes.<br/>One intelligence.</h2>
+                <ul class="space-y-6">
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-xl shrink-0">💬</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Chat Mode</h4>
+                            <p class="text-sm text-gray-500">Fluid, contextual conversations.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 shadow-sm border border-brand-100 flex items-center justify-center text-xl shrink-0">⌨️</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Code Mode</h4>
+                            <p class="text-sm text-gray-500">Syntax highlighting, debugging, and logic.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-xl shrink-0">🖼️</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Image Mode</h4>
+                            <p class="text-sm text-gray-500">Visual generation and diagramming.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-xl shrink-0">🎬</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Video Mode</h4>
+                            <p class="text-sm text-gray-500">Render concepts into motion.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="lg:w-1/2 w-full gsap-fade-left">
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-float overflow-hidden flex flex-col h-[400px]">
+                    <div class="h-12 border-b border-gray-100 bg-[#FAFAFA] flex items-center px-4 gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        <div class="ml-4 text-xs font-medium text-gray-400 font-mono">v1k-code-environment</div>
+                    </div>
+                    <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-6">
+                        <div class="flex gap-4 self-end flex-row-reverse max-w-[85%]">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0"></div>
+                            <div class="bg-gray-100 text-gray-800 text-sm p-3 rounded-2xl rounded-tr-none">
+                                Explain recursion with a Python example.
+                            </div>
+                        </div>
+                        <div class="flex gap-4 max-w-[95%]">
+                            <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">∧</div>
+                            <div class="text-sm text-gray-800 w-full">
+                                <p class="mb-3">Recursion is when a function calls itself to break down a problem. Here is a classic factorial example:</p>
+                                <div class="bg-gray-900 text-gray-300 p-4 rounded-xl font-mono text-xs overflow-x-auto relative">
+                                    <span id="typewriter-text"></span><span class="blinking-cursor"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-24 bg-[#FAFAFA]" id="why">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 gsap-fade-up">Engineering intelligence, <br/>at its finest.</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-y-12 gap-x-8">
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">📚</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Study Mode</h4>
+                    <p class="text-sm text-gray-500">Trained on GTU, SPPU, VTU & GATE materials.</p>
+                </div>
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">💾</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Hybrid Memory</h4>
+                    <p class="text-sm text-gray-500">Remembers context across chats seamlessly.</p>
+                </div>
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">🌊</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Streaming Responses</h4>
+                    <p class="text-sm text-gray-500">Read exactly as the AI thinks, token by token.</p>
+                </div>
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">🔐</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Tiered Access</h4>
+                    <p class="text-sm text-gray-500">Scalable plans from student to enterprise.</p>
+                </div>
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">🎯</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Confidence Scoring</h4>
+                    <p class="text-sm text-gray-500">Know when to trust the generated code.</p>
+                </div>
+                <div class="gsap-feature flex flex-col items-center">
+                    <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mb-4 text-xl">🛠️</div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Built from Scratch</h4>
+                    <p class="text-sm text-gray-500">Engineered by Goswami Kishan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6 bg-white" id="pricing">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">Simple, transparent pricing.</h2>
+                <div class="inline-flex items-center p-1 bg-gray-100 rounded-full border border-gray-200">
+                    <button class="px-6 py-2 rounded-full bg-white shadow-sm text-sm font-semibold text-gray-900">Monthly</button>
+                    <button class="px-6 py-2 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Yearly <span class="text-brand-500 ml-1">-20%</span></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="gsap-price p-8 rounded-3xl bg-[#FAFAFA] border border-gray-100 shadow-sm flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Free</h3>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$0<span class="text-sm text-gray-500 font-normal">/mo</span></div>
+                    <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-600">
+                        <li class="flex gap-2"><span>✓</span> Text conversations</li>
+                        <li class="flex gap-2"><span>✓</span> 5 daily requests</li>
+                        <li class="flex gap-2"><span>✓</span> Standard model</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full border border-gray-200 font-medium hover:bg-gray-50 transition-colors">Get Started</button>
+                </div>
+
+                <div class="gsap-price relative p-8 rounded-3xl bg-white border-2 border-brand-500 shadow-float flex flex-col transform md:-translate-y-4">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase">Most Popular</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Pro</h3>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$9.99<span class="text-sm text-gray-500 font-normal">/mo</span></div>
+                    <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-600">
+                        <li class="flex gap-2"><span>✓</span> Unlimited conversations</li>
+                        <li class="flex gap-2 font-medium text-gray-900"><span>✓</span> Advanced Code gen</li>
+                        <li class="flex gap-2"><span>✓</span> 100 images/day</li>
+                        <li class="flex gap-2"><span>✓</span> Video Mode (240p)</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors shadow-md">Upgrade to Pro</button>
+                </div>
+
+                <div class="gsap-price p-8 rounded-3xl bg-[#FAFAFA] border border-gray-100 shadow-sm flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium</h3>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$24.99<span class="text-sm text-gray-500 font-normal">/mo</span></div>
+                    <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-600">
+                        <li class="flex gap-2"><span>✓</span> Everything in Pro</li>
+                        <li class="flex gap-2"><span>✓</span> 4K Image Generation</li>
+                        <li class="flex gap-2"><span>✓</span> 1080p Video Mode</li>
+                        <li class="flex gap-2"><span>✓</span> Shared Team Seats</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full border border-gray-200 font-medium hover:bg-gray-50 transition-colors">Choose Premium</button>
+                </div>
+
+                <div class="gsap-price p-8 rounded-3xl bg-gray-900 text-white border border-gray-800 shadow-sm flex flex-col">
+                    <h3 class="text-lg font-semibold text-white mb-2">Enterprise</h3>
+                    <div class="text-4xl font-bold text-white mb-6">Custom</div>
+                    <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-300">
+                        <li class="flex gap-2"><span>✓</span> Unlimited everything</li>
+                        <li class="flex gap-2"><span>✓</span> 99.99% SLA uptime</li>
+                        <li class="flex gap-2"><span>✓</span> Custom integrations</li>
+                        <li class="flex gap-2"><span>✓</span> Dedicated support</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full bg-white text-gray-900 font-medium hover:bg-gray-100 transition-colors">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-gray-100 bg-[#FAFAFA]">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-8">Enterprise-Grade Security & Deployment</p>
+            <div class="flex flex-wrap justify-center gap-8 md:gap-16 items-center opacity-60">
+                <div class="flex items-center gap-2 font-medium text-gray-800"><span class="text-xl">🔒</span> E2E Encryption</div>
+                <div class="flex items-center gap-2 font-medium text-gray-800"><span class="text-xl">🛡️</span> Zero Data Retention</div>
+                <div class="flex items-center gap-2 font-medium text-gray-800"><span class="text-xl">☁️</span> Cloud Hosted</div>
+                <div class="flex items-center gap-2 font-medium text-gray-800"><span class="text-xl">💻</span> Local Stack (XAMPP/MySQL)</div>
+                <div class="flex items-center gap-2 font-medium text-gray-800"><span class="text-xl">🏢</span> Enterprise On-Prem</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-white">
+        <div class="max-w-4xl mx-auto text-center gsap-fade-up">
+            <div class="text-yellow-400 text-2xl mb-6">★★★★★</div>
+            <h3 class="text-2xl md:text-4xl font-medium text-gray-900 leading-tight mb-8">
+                "V1K doesn't just answer questions — it understands them. It's like having a senior engineer who knows exactly what I'm studying."
+            </h3>
+            <div class="flex items-center justify-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gray-200"></div>
+                <div class="text-left">
+                    <div class="font-semibold text-gray-900">Riya Sharma</div>
+                    <div class="text-sm text-gray-500">B.E. Computer Engineering, GTU</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-[#FAFAFA] border-t border-gray-200 pt-24 pb-10 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24">
+                <h2 class="text-5xl font-bold tracking-tight text-gray-900 mb-8">Build smarter. Learn deeper.</h2>
+                <button class="bg-gray-900 text-white px-10 py-4 rounded-full text-lg font-medium hover-lift shadow-float">
+                    Start Building with V1K
                 </button>
             </div>
-        </header>
-
-        <main class="flex-1 max-w-4xl px-6 py-8 md:px-32">
-            <p class="text-sm text-gray-500 mb-6">About 1,420,000,000 results (0.34 seconds)</p>
             
-            <div id="dynamic-results" class="space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-8 gap-4">
+                <div class="flex items-center gap-2 font-bold text-lg">
+                    <span class="text-brand-500">∧</span> V1K
                 </div>
-        </main>
-    </div>
-
-    <footer class="bg-gray-50 border-t border-gray-200 text-sm text-gray-500 py-3 px-6 mt-auto">
-        <div class="flex justify-center md:justify-start gap-6">
-            <a href="#" class="hover:text-gray-800">About</a>
-            <a href="#" class="hover:text-gray-800">Advertising</a>
-            <a href="#" class="hover:text-gray-800">Business</a>
-            <a href="#" class="hover:text-gray-800">How Search Works</a>
+                <div class="flex gap-6 text-sm text-gray-500 font-medium">
+                    <a href="#" class="hover:text-gray-900">Platform</a>
+                    <a href="#" class="hover:text-gray-900">Company</a>
+                    <a href="#" class="hover:text-gray-900">Legal</a>
+                </div>
+                <div class="text-sm text-gray-400 text-center md:text-right">
+                    <p>&copy; 2025 V1K. All rights reserved.</p>
+                    <p class="mt-1 font-medium text-gray-500">Developed by Goswami Kishan · Made in India 🇮🇳</p>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
 
-        // DOM Elements
-        const homeView = document.getElementById('home-view');
-        const resultsView = document.getElementById('results-view');
-        const mainInput = document.getElementById('search-input');
-        const resultsInput = document.getElementById('results-search-input');
-        const searchBtn = document.getElementById('search-btn');
-        const closeResultsBtn = document.getElementById('close-results');
-        const resultsContainer = document.getElementById('dynamic-results');
+            // 1. Hero Load Animation
+            gsap.fromTo(".gsap-hero-elem", 
+                { y: 40, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.2 }
+            );
 
-        // Function to handle the search action
-        function performSearch(query) {
-            if (!query.trim()) return; // Don't search if empty
-
-            // 1. Update the mini search bar with the query
-            resultsInput.value = query;
-
-            // 2. Hide Homepage, Show Results Page
-            homeView.classList.add('hidden');
-            homeView.classList.remove('fade-enter-active');
-            
-            resultsView.classList.remove('hidden');
-            resultsView.classList.add('fade-enter', 'fade-enter-active');
-
-            // 3. Generate Mock Search Results based on the query
-            generateMockResults(query);
-        }
-
-        // Generate fake results to make it look like it's working
-        function generateMockResults(query) {
-            resultsContainer.innerHTML = ''; // Clear previous results
-            
-            const results = [
-                {
-                    url: `https://www.example.com/${query.replace(/\s+/g, '-')}`,
-                    title: `Official site for ${query}`,
-                    desc: `Explore the latest information, news, and updates regarding ${query}. Our comprehensive guide covers everything you need to know about this topic.`
-                },
-                {
-                    url: `https://en.wikipedia.org/wiki/${query.replace(/\s+/g, '_')}`,
-                    title: `${query} - Wikipedia`,
-                    desc: `${query} is a broad topic encompassing various technological and historical aspects. Learn about its origins, development, and impact on modern society.`
-                },
-                {
-                    url: `https://news.nexus.com/topics/${query}`,
-                    title: `Breaking News about ${query} today`,
-                    desc: `Top stories, opinions, and detailed analysis surrounding ${query}. Stay updated with real-time alerts.`
-                }
-            ];
-
-            results.forEach(res => {
-                const resultHTML = `
-                    <div class="max-w-2xl group">
-                        <div class="flex items-center gap-2 mb-1">
-                            <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500">W</div>
-                            <span class="text-sm text-gray-700 truncate">${res.url}</span>
-                        </div>
-                        <a href="#" class="text-xl text-blue-600 hover:underline mb-1 inline-block">${res.title}</a>
-                        <p class="text-sm text-gray-600 leading-relaxed">${res.desc}</p>
-                    </div>
-                `;
-                resultsContainer.insertAdjacentHTML('beforeend', resultHTML);
+            // 2. Stats Counter Animation
+            const stats = document.querySelectorAll('.counter');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                gsap.to(stat, {
+                    innerHTML: target,
+                    duration: 2,
+                    snap: { innerHTML: 1 },
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#stats",
+                        start: "top 80%",
+                    }
+                });
             });
-        }
 
-        // Event Listeners
-        searchBtn.addEventListener('click', () => performSearch(mainInput.value));
-        
-        mainInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch(mainInput.value);
-        });
+            // 3. Bento Box Staggered Reveal
+            gsap.fromTo(".gsap-bento",
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out",
+                  scrollTrigger: {
+                      trigger: "#platform",
+                      start: "top 75%"
+                  }
+                }
+            );
 
-        resultsInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch(resultsInput.value);
-        });
+            // 4. General Fade Ups
+            gsap.utils.toArray('.gsap-fade-up').forEach(elem => {
+                gsap.fromTo(elem,
+                    { y: 40, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+                      scrollTrigger: { trigger: elem, start: "top 85%" }
+                    }
+                );
+            });
 
-        // "X" button to go back to homepage
-        closeResultsBtn.addEventListener('click', () => {
-            resultsView.classList.add('hidden');
-            resultsView.classList.remove('fade-enter-active');
+            // 5. Left/Right Reveals in Modes Section
+            gsap.fromTo(".gsap-fade-right",
+                { x: -50, opacity: 0 },
+                { x: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: "#modes", start: "top 70%" }}
+            );
+            gsap.fromTo(".gsap-fade-left",
+                { x: 50, opacity: 0 },
+                { x: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: "#modes", start: "top 70%" }}
+            );
+
+            // 6. Features grid stagger
+            gsap.fromTo(".gsap-feature",
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "power2.out",
+                  scrollTrigger: { trigger: "#why", start: "top 75%" }
+                }
+            );
+
+            // 7. Pricing Cards
+            gsap.fromTo(".gsap-price",
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "back.out(1.2)",
+                  scrollTrigger: { trigger: "#pricing", start: "top 75%" }
+                }
+            );
+
+            // 8. Typewriter Effect Logic for Mock UI
+            const codeSnippet = `def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+print(factorial(5)) # Output: 120`;
             
-            homeView.classList.remove('hidden');
-            // Slight delay to allow display:block to apply before animating opacity
-            setTimeout(() => homeView.classList.add('fade-enter-active'), 10);
-            
-            mainInput.value = '';
-            mainInput.focus();
+            const typeWriterElem = document.getElementById("typewriter-text");
+            let i = 0;
+            let typeWriterTriggered = false;
+
+            function typeWriter() {
+                if (i < codeSnippet.length) {
+                    typeWriterElem.innerHTML += codeSnippet.charAt(i) === '\n' ? '<br>' : codeSnippet.charAt(i).replace(' ', '&nbsp;');
+                    i++;
+                    setTimeout(typeWriter, 30 + Math.random() * 40); // Variable typing speed
+                }
+            }
+
+            ScrollTrigger.create({
+                trigger: "#modes",
+                start: "top 50%",
+                onEnter: () => {
+                    if(!typeWriterTriggered) {
+                        setTimeout(typeWriter, 800); // Small delay after scrolling into view
+                        typeWriterTriggered = true;
+                    }
+                }
+            });
+
+            // Navbar shadow on scroll
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 20) {
+                    nav.classList.add('shadow-sm');
+                    nav.classList.remove('bg-white/70');
+                    nav.classList.add('bg-white/90');
+                } else {
+                    nav.classList.remove('shadow-sm');
+                    nav.classList.remove('bg-white/90');
+                    nav.classList.add('bg-white/70');
+                }
+            });
         });
-        
-        // Auto-focus the search input on load
-        window.onload = () => mainInput.focus();
     </script>
 </body>
 </html>
