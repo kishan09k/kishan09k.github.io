@@ -1,329 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>V1K AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V1K Elite</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 
 <style>
-:root {
-  --bg: #FAFAFA;
-  --card: rgba(255,255,255,0.7);
-  --text: #111;
-  --muted: #666;
-  --radius: 18px;
+:root{
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:32px;
+  --space-5:48px;
+  --space-6:64px;
+
+  --bg:#FAFAFA;
+  --text:#111;
+  --muted:#666;
 }
 
-* {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
   overflow-x:hidden;
 }
 
-/* NAVBAR */
-nav {
+/* WEBGL CANVAS */
+#bg{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
+}
+
+/* NAV */
+nav{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  padding:20px 40px;
-  position:sticky;
-  top:0;
-  backdrop-filter: blur(10px);
-  z-index:100;
+  padding:var(--space-2) var(--space-4);
+  backdrop-filter:blur(12px);
 }
 
-nav .logo {
-  font-weight:700;
-}
+.logo{font-weight:700;}
 
-nav .links {
-  display:flex;
-  gap:25px;
-}
-
-nav .cta {
-  background: linear-gradient(135deg,#e0e7ff,#c7d2fe);
-  padding:10px 18px;
+.btn{
+  padding:12px 20px;
   border-radius:999px;
+  background:linear-gradient(135deg,#e0e7ff,#c7d2fe);
   cursor:pointer;
   transition:0.3s;
 }
-nav .cta:hover {
-  transform: translateY(-2px);
-}
 
 /* HERO */
-.hero {
+.hero{
   text-align:center;
-  padding:100px 20px;
+  padding:var(--space-6) var(--space-3);
 }
 
-.badge {
-  border:1px solid #ddd;
-  padding:8px 16px;
-  border-radius:999px;
-  display:inline-block;
-  margin-bottom:20px;
-  font-size:14px;
+.hero h1{
+  font-size:clamp(36px,6vw,72px);
 }
 
-.hero h1 {
-  font-size: clamp(32px,6vw,64px);
-  font-weight:700;
-}
-
-.gradient {
-  background: linear-gradient(90deg,#6366f1,#06b6d4);
+.gradient{
+  background:linear-gradient(90deg,#6366f1,#06b6d4);
   -webkit-background-clip:text;
   color:transparent;
 }
 
-.hero p {
-  color: var(--muted);
-  margin:20px 0;
-}
-
-.hero .buttons {
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-top:20px;
-}
-
-.btn {
-  padding:12px 22px;
-  border-radius:999px;
-  border:none;
-  cursor:pointer;
-}
-
-.primary {
-  background: linear-gradient(135deg,#c7d2fe,#93c5fd);
-}
-
-.secondary {
-  background:#eee;
-}
-
-/* MARQUEE */
-.marquee {
-  overflow:hidden;
-  white-space:nowrap;
-  padding:20px;
-}
-
-.marquee span {
-  display:inline-block;
-  padding-right:40px;
-  animation: scroll 20s linear infinite;
-}
-
-@keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-
-/* STATS */
-.stats {
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  padding:60px 20px;
-  flex-wrap:wrap;
-}
-
-.stat h2 {
-  font-size:32px;
-}
-
-/* BENTO GRID */
-.grid {
+/* BENTO */
+.grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  padding:60px 40px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:var(--space-3);
+  padding:var(--space-5);
 }
 
-.card {
-  background: var(--card);
-  backdrop-filter: blur(10px);
-  padding:25px;
-  border-radius:var(--radius);
-  transition: transform 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* CHAT MOCK */
-.chat {
+.card{
   background:white;
-  border-radius:var(--radius);
-  padding:20px;
-  margin:40px auto;
-  max-width:600px;
+  padding:var(--space-3);
+  border-radius:20px;
+  transition:transform 0.2s;
+  transform-style:preserve-3d;
 }
 
-/* PRICING */
-.pricing {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-  justify-content:center;
-  padding:60px;
-}
-
-.price-card {
+/* CHAT DEMO */
+.demo{
+  max-width:700px;
+  margin:auto;
   background:white;
-  padding:30px;
-  border-radius:var(--radius);
-  width:250px;
-  text-align:center;
+  padding:var(--space-3);
+  border-radius:20px;
 }
 
-.popular {
-  border:2px solid #6366f1;
-  transform: scale(1.05);
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  margin-top:10px;
 }
 
-/* FOOTER */
-footer {
-  text-align:center;
-  padding:60px 20px;
-  color:var(--muted);
-}
-
-/* MOBILE */
-@media(max-width:768px) {
-  nav .links { display:none; }
+/* CURSOR */
+.cursor{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#6366f1;
+  position:fixed;
+  pointer-events:none;
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="bg"></canvas>
+<div class="cursor"></div>
+
 <nav>
   <div class="logo">∧ V1K</div>
-  <div class="links">
-    <span>Platform</span>
-    <span>Modes</span>
-    <span>Features</span>
-    <span>Pricing</span>
-    <span>About</span>
-  </div>
-  <div class="cta">Try V1K Free →</div>
+  <div class="btn magnet">Try Free →</div>
 </nav>
 
 <section class="hero">
-  <div class="badge">∧V1K-7B · 163 Memories · Live</div>
   <h1>AI that thinks <span class="gradient">with you.</span></h1>
-  <p>Next-generation conversational intelligence for engineers.</p>
-
-  <div class="buttons">
-    <button class="btn primary">Experience V1K →</button>
-    <button class="btn secondary">View Plans</button>
-  </div>
-</section>
-
-<div class="marquee">
-  <span>ChromaDB • RAG Pipeline • Real-time Streaming • Hybrid Memory • GATE Prep • Study Mode •</span>
-</div>
-
-<section class="stats">
-  <div class="stat"><h2 class="count" data-target="163">0</h2><p>Memories</p></div>
-  <div class="stat"><h2 class="count" data-target="4">0</h2><p>Modes</p></div>
-  <div class="stat"><h2 class="count" data-target="7">0</h2><p>B Model</p></div>
 </section>
 
 <section class="grid">
-  <div class="card">🧠 Hybrid Memory</div>
-  <div class="card">⚡ Live Streaming</div>
-  <div class="card">📊 Confidence Score</div>
-  <div class="card">🔬 Custom Model</div>
+  <div class="card tilt">🧠 Hybrid Memory</div>
+  <div class="card tilt">⚡ Streaming</div>
+  <div class="card tilt">📊 Confidence</div>
+  <div class="card tilt">🔬 Custom Model</div>
 </section>
 
-<div class="chat">
-  <p><b>User:</b> Explain recursion in Python</p>
-  <p id="typing"></p>
-</div>
-
-<section class="pricing">
-  <div class="price-card">
-    <h3>Free</h3>
-    <p>$0</p>
-  </div>
-
-  <div class="price-card popular">
-    <h3>Pro</h3>
-    <p>$9.99</p>
-  </div>
-
-  <div class="price-card">
-    <h3>Premium</h3>
-    <p>$24.99</p>
-  </div>
+<section class="demo">
+  <b>Ask V1K:</b>
+  <input id="input" placeholder="Type something..."/>
+  <p id="response"></p>
 </section>
-
-<footer>
-  Build smarter. Learn deeper.<br><br>
-  Developed by Goswami Kishan · Made in India 🇮🇳
-</footer>
 
 <script>
-// GSAP
-gsap.registerPlugin(ScrollTrigger);
 
-gsap.from(".hero h1", {
-  opacity:0,
-  y:50,
-  duration:1
-});
+/* ---------------- WEBGL PARTICLES ---------------- */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById("bg"),alpha:true});
+renderer.setSize(innerWidth,innerHeight);
 
-// COUNT UP
-document.querySelectorAll('.count').forEach(el=>{
-  let target = +el.dataset.target;
-  let count = 0;
+const geometry = new THREE.BufferGeometry();
+const vertices = [];
 
-  let update = () => {
-    count += target/50;
-    if(count < target){
-      el.innerText = Math.floor(count);
-      requestAnimationFrame(update);
-    } else {
-      el.innerText = target;
-    }
-  };
+for(let i=0;i<1000;i++){
+  vertices.push(
+    (Math.random()-0.5)*20,
+    (Math.random()-0.5)*20,
+    (Math.random()-0.5)*20
+  );
+}
 
-  ScrollTrigger.create({
-    trigger: el,
-    onEnter: update
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices,3));
+
+const material = new THREE.PointsMaterial({size:0.03});
+const points = new THREE.Points(geometry,material);
+scene.add(points);
+
+camera.position.z = 5;
+
+function animate(){
+  requestAnimationFrame(animate);
+  points.rotation.y += 0.0005;
+  renderer.render(scene,camera);
+}
+animate();
+
+/* ---------------- CURSOR ---------------- */
+const cursor = document.querySelector(".cursor");
+
+document.addEventListener("mousemove", e=>{
+  gsap.to(cursor,{
+    x:e.clientX,
+    y:e.clientY,
+    duration:0.2
   });
 });
 
-// TYPING
-let text = "def fact(n): return 1 if n==0 else n*fact(n-1)";
-let i = 0;
-function typing(){
-  if(i < text.length){
-    document.getElementById("typing").innerHTML += text.charAt(i);
-    i++;
-    setTimeout(typing,30);
+/* ---------------- MAGNETIC BUTTON ---------------- */
+document.querySelectorAll(".magnet").forEach(btn=>{
+  btn.addEventListener("mousemove", e=>{
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width/2;
+    const y = e.clientY - rect.top - rect.height/2;
+
+    gsap.to(btn,{
+      x:x*0.2,
+      y:y*0.2
+    });
+  });
+
+  btn.addEventListener("mouseleave",()=>{
+    gsap.to(btn,{x:0,y:0});
+  });
+});
+
+/* ---------------- 3D TILT ---------------- */
+document.querySelectorAll(".tilt").forEach(card=>{
+  card.addEventListener("mousemove", e=>{
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left)/rect.width - 0.5;
+    const y = (e.clientY - rect.top)/rect.height - 0.5;
+
+    gsap.to(card,{
+      rotationY:x*10,
+      rotationX:-y*10,
+      transformPerspective:500
+    });
+  });
+
+  card.addEventListener("mouseleave",()=>{
+    gsap.to(card,{rotationX:0,rotationY:0});
+  });
+});
+
+/* ---------------- REAL DEMO ---------------- */
+document.getElementById("input").addEventListener("keypress", e=>{
+  if(e.key === "Enter"){
+    const val = e.target.value;
+    const res = document.getElementById("response");
+
+    res.innerHTML = "Thinking...";
+    
+    setTimeout(()=>{
+      res.innerHTML = "def factorial(n): return 1 if n==0 else n*factorial(n-1)";
+    },800);
   }
-}
-typing();
+});
 
 </script>
 
