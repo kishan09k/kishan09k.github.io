@@ -1,403 +1,223 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V1K | Advanced Conversational Intelligence</title>
+    <title>Nexus Search | The Future of Search</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: { 50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a' },
-                        surface: '#FAFAFA'
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     boxShadow: {
-                        'soft': '0 10px 40px -10px rgba(0,0,0,0.03)',
-                        'float': '0 20px 50px -20px rgba(0,0,0,0.08)',
-                        'glow': '0 0 30px rgba(20, 184, 166, 0.15)',
+                        'search': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'search-focus': '0 8px 30px -4px rgba(59, 130, 246, 0.15)'
                     }
                 }
             }
         }
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body {
-            background-color: #FAFAFA;
-            color: #0f172a;
+            background-color: #FFFFFF;
+            color: #1f2937;
             overflow-x: hidden;
         }
-
-        /* 1. Precision Grid Background */
-        .bg-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            z-index: -2;
-            pointer-events: none;
+        
+        /* Smooth transitions for hiding/showing views */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease-out;
         }
-
-        /* 2. Cursor Spotlight Glow */
-        #cursor-glow {
-            position: fixed;
-            top: 0; left: 0;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, rgba(250, 250, 250, 0) 60%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-
-        /* 3. Advanced Glassmorphism */
-        .glass {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        /* 4. Scroll Progress Bar */
-        #scroll-progress {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
-            background: linear-gradient(to right, #14b8a6, #3b82f6);
-            z-index: 100;
-            width: 0%;
-        }
-
-        /* 5. Marquee */
-        .marquee-wrapper {
-            display: flex;
-            width: max-content;
-            animation: marquee 35s linear infinite;
-        }
-        @keyframes marquee { to { transform: translateX(-50%); } }
-
-        /* 6. Syntax Typewriter Cursor */
-        .typing-cursor::after {
-            content: '█';
-            animation: blink 1s step-start infinite;
-            color: #14b8a6;
-            margin-left: 4px;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* 7. 3D Tilt Configuration */
-        .tilt-card {
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
-        }
-        .tilt-content {
-            transform: translateZ(30px); /* Pushes content forward for 3D effect */
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
+<body class="antialiased min-h-screen flex flex-col">
 
-    <div class="bg-grid"></div>
-    <div id="cursor-glow"></div>
-    <div id="scroll-progress"></div>
-
-    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12" id="navbar">
-        <div class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex justify-between items-center shadow-soft">
-            <a href="#" class="text-xl font-bold tracking-tight text-slate-800 flex items-center gap-2 z-20">
-                <span class="text-brand-500 text-2xl font-light">∧</span> V1K
-            </a>
-            
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500">
-                <a href="#platform" class="hover:text-slate-900 transition-colors">Platform</a>
-                <a href="#modes" class="hover:text-slate-900 transition-colors">Modes</a>
-                <a href="#features" class="hover:text-slate-900 transition-colors">Features</a>
-                <a href="#pricing" class="hover:text-slate-900 transition-colors">Pricing</a>
-            </div>
-
-            <div class="hidden md:flex items-center gap-5">
-                <a href="#" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Sign In</a>
-                <a href="#" class="bg-slate-900 text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg hover:bg-brand-500 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
-                    Try Free
-                </a>
-            </div>
-
-            <button id="mobile-menu-btn" class="md:hidden text-slate-600 z-20 relative">
-                <i data-lucide="menu"></i>
-            </button>
-        </div>
-
-        <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-md z-10 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-300">
-            <a href="#platform" class="text-2xl font-bold text-slate-800 mobile-link">Platform</a>
-            <a href="#modes" class="text-2xl font-bold text-slate-800 mobile-link">Modes</a>
-            <a href="#features" class="text-2xl font-bold text-slate-800 mobile-link">Features</a>
-            <a href="#pricing" class="text-2xl font-bold text-slate-800 mobile-link">Pricing</a>
-        </div>
+    <nav class="flex justify-end p-4 md:px-8 items-center gap-4 text-sm font-medium text-gray-600">
+        <a href="#" class="hover:text-gray-900 transition-colors">Images</a>
+        <a href="#" class="hover:text-gray-900 transition-colors">Mail</a>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors shadow-sm">Sign In</button>
     </nav>
 
-    <section class="relative pt-48 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div class="hero-elem inline-flex items-center gap-2 px-4 py-2 rounded-full glass shadow-soft text-xs font-semibold text-slate-600 mb-8 border border-white/80">
-            <span class="relative flex h-2.5 w-2.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
-            </span>
-            ∧V1K-7B Engine Live
-        </div>
-
-        <h1 class="hero-elem text-6xl md:text-8xl font-bold tracking-tighter text-slate-900 mb-6 max-w-5xl leading-[1.05]">
-            Intelligence that <br class="hidden md:block"/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-teal-400 to-blue-500">scales with you.</span>
+    <main id="home-view" class="flex-1 flex flex-col items-center justify-center px-4 -mt-20 fade-enter fade-enter-active">
+        
+        <h1 class="text-6xl font-bold tracking-tighter mb-8 text-gray-900 flex items-center gap-1">
+            <span class="text-blue-600">N</span>
+            <span class="text-red-500">e</span>
+            <span class="text-yellow-500">x</span>
+            <span class="text-blue-600">u</span>
+            <span class="text-green-500">s</span>
         </h1>
 
-        <p class="hero-elem text-lg md:text-xl text-slate-500 max-w-2xl mb-12 font-light">
-            Next-generation multimodal reasoning with persistent contextual memory. <strong class="font-medium text-slate-800">Engineered strictly for builders.</strong>
-        </p>
-
-        <div class="hero-elem flex flex-col sm:flex-row gap-4 mb-20 z-10">
-            <a href="#platform" class="group relative bg-slate-900 text-white px-8 py-4 rounded-full font-medium transition-all shadow-float flex items-center justify-center gap-2 overflow-hidden">
-                <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
-                Initialize V1K <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
-    </section>
-
-    <section id="platform" class="py-24 px-6 md:px-12 max-w-7xl mx-auto reveal">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">Built different.</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="tilt-card md:col-span-2 bg-white rounded-3xl p-1 border border-slate-200 shadow-soft relative group">
-                <div class="absolute inset-0 bg-gradient-to-br from-brand-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
-                <div class="bg-white rounded-[23px] h-full p-8 relative z-10 pointer-events-none">
-                    <div class="tilt-content">
-                        <i data-lucide="database" class="w-8 h-8 text-brand-500 mb-6"></i>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-3">Hybrid Memory Architecture</h3>
-                        <p class="text-slate-500">ChromaDB combined with an advanced RAG pipeline ensures persistent contextual recall across endless engineering sessions.</p>
-                    </div>
-                </div>
+        <div class="w-full max-w-2xl relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i data-lucide="search" class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
             </div>
-            <div class="tilt-card bg-white rounded-3xl p-1 border border-slate-200 shadow-soft group">
-                <div class="bg-white rounded-[23px] h-full p-8 relative z-10 pointer-events-none">
-                    <div class="tilt-content">
-                        <i data-lucide="zap" class="w-8 h-8 text-yellow-500 mb-6"></i>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3">Zero Latency</h3>
-                        <p class="text-slate-500">Butter-smooth, token-level streaming responses.</p>
-                    </div>
-                </div>
+            
+            <input 
+                type="text" 
+                id="search-input"
+                class="w-full pl-12 pr-12 py-4 rounded-full border border-gray-200 shadow-search hover:shadow-search-focus focus:shadow-search-focus focus:border-blue-200 outline-none transition-all text-lg"
+                placeholder="Search the web or type a URL..."
+                autocomplete="off"
+            >
+            
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hover:bg-gray-100 rounded-full my-2 mr-2 px-2 transition-colors">
+                <i data-lucide="mic" class="w-5 h-5 text-blue-500"></i>
             </div>
         </div>
-    </section>
 
-    <section id="modes" class="py-24 px-6 md:px-12 bg-white border-y border-slate-100 reveal">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Native Code Execution.</h2>
-                <p class="text-lg text-slate-500 mb-10">Experience syntax-verified, logically sound code generation designed to compile on the first try.</p>
-                <div class="flex gap-4">
-                    <div class="px-5 py-2.5 rounded-full bg-brand-50 text-brand-600 font-medium text-sm flex items-center gap-2"><i data-lucide="code"></i> Python</div>
-                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-slate-600 font-medium text-sm flex items-center gap-2"><i data-lucide="terminal"></i> Bash</div>
-                </div>
-            </div>
-
-            <div class="bg-[#0D1117] rounded-2xl shadow-float overflow-hidden flex flex-col h-[350px] border border-slate-800 tilt-card">
-                <div class="bg-[#161B22] px-4 py-3 flex items-center gap-2 border-b border-slate-800">
-                    <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                    <div class="mx-auto text-xs font-mono text-slate-400">main.py — V1K Pro</div>
-                </div>
-                <div class="p-6 flex-1 overflow-y-auto font-mono text-sm text-slate-300 leading-relaxed relative">
-                    <div class="tilt-content">
-                        <span class="text-slate-500"># User: Write a reliable recursive factorial</span><br><br>
-                        <span id="advanced-typewriter" class="typing-cursor"></span>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-8 flex gap-4">
+            <button id="search-btn" class="bg-gray-50 border border-gray-100 text-gray-700 px-6 py-2.5 rounded-md text-sm hover:border-gray-300 hover:shadow-sm transition-all">
+                Nexus Search
+            </button>
+            <button class="bg-gray-50 border border-gray-100 text-gray-700 px-6 py-2.5 rounded-md text-sm hover:border-gray-300 hover:shadow-sm transition-all">
+                I'm Feeling Lucky
+            </button>
         </div>
-    </section>
+    </main>
 
-    <footer class="bg-white pt-24 pb-12 px-6 mt-12">
-        <div class="max-w-7xl mx-auto text-center mb-20 reveal">
-            <h2 class="text-5xl md:text-7xl font-bold text-slate-900 mb-8 tracking-tight">Ready to build?</h2>
-            <a href="#" class="inline-flex bg-brand-500 text-white px-10 py-5 rounded-full font-bold hover:bg-brand-600 transition-all shadow-glow items-center gap-2 text-lg transform hover:scale-105">
-                Start Using V1K Free <i data-lucide="rocket" class="w-5 h-5"></i>
-            </a>
-        </div>
-        <div class="text-center text-sm text-slate-400 font-medium border-t border-slate-100 pt-8">
-            &copy; 2025 V1K Intelligence. Crafted by Goswami Kishan.
+    <div id="results-view" class="hidden flex-1 flex-col w-full">
+        <header class="flex items-center gap-8 px-6 py-4 border-b border-gray-100 bg-white">
+            <h2 class="text-2xl font-bold tracking-tighter text-gray-900">
+                <span class="text-blue-600">N</span><span class="text-red-500">e</span><span class="text-yellow-500">x</span><span class="text-blue-600">u</span><span class="text-green-500">s</span>
+            </h2>
+            
+            <div class="flex-1 max-w-3xl relative">
+                <input 
+                    type="text" 
+                    id="results-search-input"
+                    class="w-full pl-4 pr-12 py-2.5 rounded-full border border-gray-200 shadow-sm focus:shadow-search-focus outline-none transition-all"
+                >
+                <button id="close-results" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-4xl px-6 py-8 md:px-32">
+            <p class="text-sm text-gray-500 mb-6">About 1,420,000,000 results (0.34 seconds)</p>
+            
+            <div id="dynamic-results" class="space-y-8">
+                </div>
+        </main>
+    </div>
+
+    <footer class="bg-gray-50 border-t border-gray-200 text-sm text-gray-500 py-3 px-6 mt-auto">
+        <div class="flex justify-center md:justify-start gap-6">
+            <a href="#" class="hover:text-gray-800">About</a>
+            <a href="#" class="hover:text-gray-800">Advertising</a>
+            <a href="#" class="hover:text-gray-800">Business</a>
+            <a href="#" class="hover:text-gray-800">How Search Works</a>
         </div>
     </footer>
 
     <script>
+        // Initialize Icons
         lucide.createIcons();
 
-        // 1. Cursor Spotlight Glow Logic
-        const cursorGlow = document.getElementById('cursor-glow');
-        document.addEventListener('mousemove', (e) => {
-            cursorGlow.style.left = `${e.clientX}px`;
-            cursorGlow.style.top = `${e.clientY}px`;
-        });
-        document.addEventListener('mouseleave', () => cursorGlow.style.opacity = '0');
-        document.addEventListener('mouseenter', () => cursorGlow.style.opacity = '1');
+        // DOM Elements
+        const homeView = document.getElementById('home-view');
+        const resultsView = document.getElementById('results-view');
+        const mainInput = document.getElementById('search-input');
+        const resultsInput = document.getElementById('results-search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const closeResultsBtn = document.getElementById('close-results');
+        const resultsContainer = document.getElementById('dynamic-results');
 
-        // 2. Scroll Progress Bar
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('scroll-progress').style.width = scrolled + "%";
+        // Function to handle the search action
+        function performSearch(query) {
+            if (!query.trim()) return; // Don't search if empty
+
+            // 1. Update the mini search bar with the query
+            resultsInput.value = query;
+
+            // 2. Hide Homepage, Show Results Page
+            homeView.classList.add('hidden');
+            homeView.classList.remove('fade-enter-active');
             
-            // Navbar shrink
-            const nav = document.getElementById('navbar');
-            if (winScroll > 50) {
-                nav.classList.add('py-2', 'bg-white/80'); nav.classList.remove('py-4');
-            } else {
-                nav.classList.add('py-4'); nav.classList.remove('py-2', 'bg-white/80');
-            }
-        });
+            resultsView.classList.remove('hidden');
+            resultsView.classList.add('fade-enter', 'fade-enter-active');
 
-        // 3. Mobile Menu Logic
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-        let menuOpen = false;
+            // 3. Generate Mock Search Results based on the query
+            generateMockResults(query);
+        }
 
-        menuBtn.addEventListener('click', () => {
-            menuOpen = !menuOpen;
-            if(menuOpen) {
-                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-                menuBtn.innerHTML = '<i data-lucide="x"></i>';
-                gsap.fromTo(mobileLinks, {y: 20, opacity: 0}, {y: 0, opacity: 1, stagger: 0.1, duration: 0.4});
-            } else {
-                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                menuBtn.innerHTML = '<i data-lucide="menu"></i>';
-            }
-            lucide.createIcons();
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                menuOpen = false;
-                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                menuBtn.innerHTML = '<i data-lucide="menu"></i>';
-                lucide.createIcons();
-            });
-        });
-
-        // 4. GSAP Animations
-        gsap.from(".hero-elem", { y: 40, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out", delay: 0.1 });
-        gsap.utils.toArray('.reveal').forEach(section => {
-            gsap.from(section, { scrollTrigger: { trigger: section, start: "top 80%" }, y: 50, opacity: 0, duration: 1, ease: "power3.out" });
-        });
-
-        // 5. Vanilla JS 3D Tilt Effect
-        const tiltCards = document.querySelectorAll('.tilt-card');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                // Calculate rotation (adjust multiplier for intensity)
-                const rotateX = ((y - centerY) / centerY) * -5; 
-                const rotateY = ((x - centerX) / centerX) * 5;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                card.style.transition = 'transform 0.1s ease-out';
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-            });
-        });
-
-        // 6. Advanced Syntax Typewriter
-        // Using HTML strings to simulate syntax highlighting
-        const codeTokens = [
-            { text: "def ", color: "#c678dd" }, // Keyword
-            { text: "factorial", color: "#61afef" }, // Function
-            { text: "(n):\n", color: "#abb2bf" },
-            { text: "    if ", color: "#c678dd" },
-            { text: "n == ", color: "#abb2bf" },
-            { text: "0", color: "#d19a66" }, // Number
-            { text: ":\n", color: "#abb2bf" },
-            { text: "        return ", color: "#c678dd" },
-            { text: "1", color: "#d19a66" },
-            { text: "\n    else:\n", color: "#c678dd" },
-            { text: "        return ", color: "#c678dd" },
-            { text: "n * factorial(n - ", color: "#abb2bf" },
-            { text: "1", color: "#d19a66" },
-            { text: ")", color: "#abb2bf" }
-        ];
-
-        const advTypewriter = document.getElementById('advanced-typewriter');
-        
-        ScrollTrigger.create({
-            trigger: "#modes",
-            start: "top 60%",
-            once: true,
-            onEnter: () => {
-                let currentTokenIndex = 0;
-                let currentCharIndex = 0;
-                let currentHTML = "";
-
-                function typeNext() {
-                    if (currentTokenIndex < codeTokens.length) {
-                        const token = codeTokens[currentTokenIndex];
-                        
-                        if (currentCharIndex === 0) {
-                            currentHTML += `<span style="color: ${token.color}">`;
-                        }
-
-                        // Handle newlines
-                        if (token.text[currentCharIndex] === '\n') {
-                            currentHTML += '<br>';
-                            // Handle spaces after newline manually since HTML collapses them
-                            let nextChars = token.text.substring(currentCharIndex + 1);
-                            let spaces = nextChars.match(/^ +/);
-                            if(spaces) {
-                                currentHTML += '&nbsp;'.repeat(spaces[0].length);
-                                currentCharIndex += spaces[0].length;
-                            }
-                        } else if (token.text[currentCharIndex] !== ' ') { // Skip space if already handled
-                            currentHTML += token.text[currentCharIndex];
-                        }
-
-                        currentCharIndex++;
-                        advTypewriter.innerHTML = currentHTML + "</span>";
-
-                        if (currentCharIndex >= token.text.length) {
-                            currentTokenIndex++;
-                            currentCharIndex = 0;
-                        }
-                        setTimeout(typeNext, Math.random() * 30 + 10);
-                    }
+        // Generate fake results to make it look like it's working
+        function generateMockResults(query) {
+            resultsContainer.innerHTML = ''; // Clear previous results
+            
+            const results = [
+                {
+                    url: `https://www.example.com/${query.replace(/\s+/g, '-')}`,
+                    title: `Official site for ${query}`,
+                    desc: `Explore the latest information, news, and updates regarding ${query}. Our comprehensive guide covers everything you need to know about this topic.`
+                },
+                {
+                    url: `https://en.wikipedia.org/wiki/${query.replace(/\s+/g, '_')}`,
+                    title: `${query} - Wikipedia`,
+                    desc: `${query} is a broad topic encompassing various technological and historical aspects. Learn about its origins, development, and impact on modern society.`
+                },
+                {
+                    url: `https://news.nexus.com/topics/${query}`,
+                    title: `Breaking News about ${query} today`,
+                    desc: `Top stories, opinions, and detailed analysis surrounding ${query}. Stay updated with real-time alerts.`
                 }
-                setTimeout(typeNext, 600);
-            }
+            ];
+
+            results.forEach(res => {
+                const resultHTML = `
+                    <div class="max-w-2xl group">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500">W</div>
+                            <span class="text-sm text-gray-700 truncate">${res.url}</span>
+                        </div>
+                        <a href="#" class="text-xl text-blue-600 hover:underline mb-1 inline-block">${res.title}</a>
+                        <p class="text-sm text-gray-600 leading-relaxed">${res.desc}</p>
+                    </div>
+                `;
+                resultsContainer.insertAdjacentHTML('beforeend', resultHTML);
+            });
+        }
+
+        // Event Listeners
+        searchBtn.addEventListener('click', () => performSearch(mainInput.value));
+        
+        mainInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch(mainInput.value);
         });
+
+        resultsInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch(resultsInput.value);
+        });
+
+        // "X" button to go back to homepage
+        closeResultsBtn.addEventListener('click', () => {
+            resultsView.classList.add('hidden');
+            resultsView.classList.remove('fade-enter-active');
+            
+            homeView.classList.remove('hidden');
+            // Slight delay to allow display:block to apply before animating opacity
+            setTimeout(() => homeView.classList.add('fade-enter-active'), 10);
+            
+            mainInput.value = '';
+            mainInput.focus();
+        });
+        
+        // Auto-focus the search input on load
+        window.onload = () => mainInput.focus();
     </script>
 </body>
 </html>
