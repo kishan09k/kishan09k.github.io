@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V1K - AI that thinks with you</title>
+    <!-- Premium Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === DESIGN SYSTEM & VARIABLES === */
+        :root {
+            --bg-body: #FAFAFA;
+            --bg-surface: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --shadow-color: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+            --accent-gradient: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+            --accent-soft: rgba(79, 70, 229, 0.05);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* === TYPOGRAPHY === */
+        h1, h2, h3, h4 {
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .text-gradient {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* === BUTTONS & BADGES === */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: var(--shadow-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* === NAVBAR === */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .sign-in {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        
+        .sign-in:hover { color: var(--text-main); }
+
+        /* === HERO SECTION === */
+        .hero {
+            padding-top: 180px;
+            padding-bottom: 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ambient Background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(250, 250, 250, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            max-width: 900px;
+            margin: 0 auto 24px;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 60px;
+        }
+
+        .mode-chips {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .chip:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.2);
+            color: var(--text-main);
+        }
+
+        /* === MARQUEE === */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            padding: 40px 0;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-container::before, .marquee-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 150px;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-surface) 0%, transparent 100%);
+        }
+
+        .marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-surface) 0%, transparent 100%);
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-item {
+            display: inline-block;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin: 0 32px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* === STATS SECTION === */
+        .stats {
+            padding: 100px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* === BENTO PLATFORM SECTION === */
+        .platform {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 64px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .bento-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .bento-icon {
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+        }
+
+        .bento-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .bento-card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* === MODES SHOWCASE === */
+        .modes-showcase {
+            padding: 100px 0;
+        }
+
+        .modes-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .mock-window {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .mock-header {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+            background: #F9FAFB;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #FECACA; }
+        .dot.yellow { background: #FDE68A; }
+        .dot.green { background: #A7F3D0; }
+
+        .mock-body {
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-msg {
+            margin-bottom: 24px;
+        }
+
+        .chat-msg.user {
+            text-align: right;
+        }
+
+        .chat-bubble {
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 16px;
+            max-width: 80%;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .chat-msg.user .chat-bubble {
+            background: var(--bg-body);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.ai .chat-bubble {
+            background: var(--accent-soft);
+            color: var(--text-main);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            border-bottom-left-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+        }
+
+        .modes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mode-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .mode-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .mode-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .mode-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* === PRICING === */
+        .pricing {
+            padding: 100px 0;
+            background: var(--bg-surface);
+        }
+
+        .pricing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .toggle-switch {
+            width: 56px;
+            height: 32px;
+            background: var(--text-muted);
+            border-radius: 100px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: #4F46E5;
+        }
+
+        .toggle-circle {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active .toggle-circle {
+            transform: translateX(24px);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .price-card {
+            background: var(--bg-body);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-card.popular {
+            background: var(--bg-surface);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: var(--shadow-color);
+            transform: scale(1.02);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gradient);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .price-card h3 {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .price-features {
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+
+        .price-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .price-features li::before {
+            content: '✓';
+            color: #4F46E5;
+            font-weight: bold;
+        }
+
+        /* === TESTIMONIAL === */
+        .testimonial {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .stars {
+            color: #FBBF24;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 24px;
+        }
+
+        .quote {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 500;
+            line-height: 1.4;
+            max-width: 900px;
+            margin: 0 auto 32px;
+        }
+
+        .author {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .author span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: var(--bg-surface);
+            padding: 80px 0 40px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-cta {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .footer-cta h2 {
+            font-size: 3rem;
+            margin-bottom: 32px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        /* === RESPONSIVE === */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .price-card.popular {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions { display: none; }
+            .hamburger { display: block; }
+            
+            .bento-grid, .modes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero { padding-top: 140px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="header">
+        <div class="container">
+            <nav>
+                <div class="logo">∧ V1K</div>
+                <ul class="nav-links">
+                    <li><a href="#platform">Platform</a></li>
+                    <li><a href="#modes">Modes</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="#" class="sign-in">Sign In</a>
+                    <button class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Try V1K Free &rarr;</button>
+                </div>
+                <button class="hamburger">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero gs-reveal">
+        <div class="container">
+            <div class="badge">∧V1K-7B · 163 Memories · Live</div>
+            <h1>AI that thinks <span class="text-gradient">with you.</span></h1>
+            <p>Next-generation conversational intelligence with hybrid memory, multimodal reasoning, and contextual depth — built for engineers.</p>
+            <div class="hero-btns">
+                <button class="btn btn-primary">Experience V1K &rarr;</button>
+                <button class="btn btn-secondary">View Plans</button>
+            </div>
+            <div class="mode-chips">
+                <div class="chip">💬 Chat Mode</div>
+                <div class="chip">⌨️ Code Mode</div>
+                <div class="chip">🖼️ Image Mode</div>
+                <div class="chip">🎬 Video Mode</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <!-- Double content for seamless loop -->
+            <span class="marquee-item">ChromaDB</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">RAG Pipeline</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Real-time Streaming</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Confidence Scoring</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">GTU Curriculum</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">SPPU Syllabus</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">VTU Resources</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">GATE Prep</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Hybrid Memory</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Fine-tuned 7B</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">150+ Examples</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Study Mode</span>
+            
+            <span class="marquee-item">ChromaDB</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">RAG Pipeline</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Real-time Streaming</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Confidence Scoring</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">GTU Curriculum</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">SPPU Syllabus</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">VTU Resources</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">GATE Prep</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Hybrid Memory</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Fine-tuned 7B</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">150+ Examples</span>
+            <span class="marquee-item">•</span>
+            <span class="marquee-item">Study Mode</span>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item gs-up">
+                    <div class="stat-num counter" data-target="163">0</div>
+                    <div class="stat-label">Contextual Memories</div>
+                </div>
+                <div class="stat-item gs-up">
+                    <div class="stat-num counter" data-target="4">0</div>
+                    <div class="stat-label">AI Modes</div>
+                </div>
+                <div class="stat-item gs-up">
+                    <div class="stat-num">7B</div>
+                    <div class="stat-label">Parameter Model</div>
+                </div>
+                <div class="stat-item gs-up">
+                    <div class="stat-num counter" data-target="150" data-suffix="+">0</div>
+                    <div class="stat-label">Training Examples</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BENTO PLATFORM -->
+    <section id="platform" class="platform">
+        <div class="container">
+            <div class="section-header gs-reveal">
+                <h2>Built different. <span class="text-gradient">Designed for depth.</span></h2>
+                <p>V1K is not a wrapper. Full-stack AI built from scratch — sovereign intelligence, contextual memory, multimodal reasoning.</p>
+            </div>
+            <div class="bento-grid">
+                <div class="bento-card gs-bento">
+                    <div class="bento-icon">🧠</div>
+                    <h3>Hybrid Memory</h3>
+                    <p>ChromaDB + RAG architecture ensuring persistent contextual recall across your entire engineering syllabus.</p>
+                </div>
+                <div class="bento-card gs-bento">
+                    <div class="bento-icon">⚡</div>
+                    <h3>Live Streaming</h3>
+                    <p>Token-level streaming responses for ultra-low latency generation. See the thought process in real-time.</p>
+                </div>
+                <div class="bento-card gs-bento">
+                    <div class="bento-icon">📊</div>
+                    <h3>Confidence Score</h3>
+                    <p>Every answer is rated for epistemic reliability. Never guess if the AI is hallucinating again.</p>
+                </div>
+                <div class="bento-card gs-bento">
+                    <div class="bento-icon">🔬</div>
+                    <h3>Custom Model</h3>
+                    <p>Fine-tuned on 150+ complex engineering examples to understand deep technical concepts natively.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODES SHOWCASE -->
+    <section id="modes" class="modes-showcase">
+        <div class="container">
+            <div class="section-header gs-reveal">
+                <h2>Four modes. <span class="text-gradient">One intelligence.</span></h2>
+            </div>
+            <div class="modes-container">
+                <div class="mock-window gs-left">
+                    <div class="mock-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="mock-body">
+                        <div class="chat-msg user">
+                            <div class="chat-bubble">Explain recursion with a Python example.</div>
+                        </div>
+                        <div class="chat-msg ai">
+                            <div class="chat-bubble type-animation">def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
+
+# Recursive execution</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modes-list gs-right">
+                    <div class="mode-item">
+                        <div class="mode-icon">💬</div>
+                        <div>
+                            <h4>Chat Mode</h4>
+                            <p>Deep, contextual conversations tailored to your syllabus.</p>
+                        </div>
+                    </div>
+                    <div class="mode-item">
+                        <div class="mode-icon">⌨️</div>
+                        <div>
+                            <h4>Code Mode</h4>
+                            <p>Syntax-highlighted, logical code generation & debugging.</p>
+                        </div>
+                    </div>
+                    <div class="mode-item">
+                        <div class="mode-icon">🖼️</div>
+                        <div>
+                            <h4>Image Mode</h4>
+                            <p>Generate precise technical diagrams and visual assets.</p>
+                        </div>
+                    </div>
+                    <div class="mode-item">
+                        <div class="mode-icon">🎬</div>
+                        <div>
+                            <h4>Video Mode</h4>
+                            <p>AI-generated video concepts from text prompts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header gs-reveal">
+                <h2>Engineering intelligence, <span class="text-gradient">accessible.</span></h2>
+                <p>Choose the tier that fits your workflow. Cancel anytime.</p>
+            </div>
+            
+            <div class="pricing-toggle gs-reveal">
+                <span style="font-weight: 500;">Monthly</span>
+                <div class="toggle-switch" id="billingToggle">
+                    <div class="toggle-circle"></div>
+                </div>
+                <span style="font-weight: 500;">Yearly <span style="color: #10B981; font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 100px; margin-left: 4px;">Save 20%</span></span>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="price-card gs-up">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="price-features">
+                        <li>Text conversations</li>
+                        <li>5 daily requests</li>
+                        <li>Standard context memory</li>
+                        <li>Community support</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%">Get Started</button>
+                </div>
+                
+                <div class="price-card popular gs-up">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3 style="color: #4F46E5; font-weight: 600;">Pro</h3>
+                    <div class="price">$9.99<span>/mo</span></div>
+                    <ul class="price-features">
+                        <li>Unlimited conversations</li>
+                        <li>Advanced Code Gen</li>
+                        <li>100 Images / month</li>
+                        <li>Video Mode (240p)</li>
+                        <li>Study Mode Access</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%">Upgrade to Pro</button>
+                </div>
+
+                <div class="price-card gs-up">
+                    <h3>Premium</h3>
+                    <div class="price">$24.99<span>/mo</span></div>
+                    <ul class="price-features">
+                        <li>Everything in Pro</li>
+                        <li>4K Image Generation</li>
+                        <li>1080p Video Mode</li>
+                        <li>Team Seats (Up to 5)</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%">Choose Premium</button>
+                </div>
+
+                <div class="price-card gs-up">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul class="price-features">
+                        <li>Unlimited everything</li>
+                        <li>SLA Guarantee</li>
+                        <li>Custom integration</li>
+                        <li>Local Stack (XAMPP/MySQL)</li>
+                        <li>Enterprise On-Prem</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIAL -->
+    <section class="testimonial">
+        <div class="container gs-reveal">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"V1K doesn't just answer questions — it understands them. It's like having a senior engineer who knows exactly what I'm studying."</p>
+            <div class="author">
+                Riya Sharma
+                <span>B.E. Computer Engineering, GTU</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-cta gs-reveal">
+                <h2>Build smarter. <span class="text-gradient">Learn deeper.</span></h2>
+                <button class="btn btn-primary">Try V1K Free &rarr;</button>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2025 V1K. Developed by <strong>Goswami Kishan</strong> · Made in India 🇮🇳.
+                </div>
+                <div class="footer-links">
+                    <a href="#">Platform</a>
+                    <a href="#">Company</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP & ScrollTrigger Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        // Register ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Header scroll effect
+        const header = document.querySelector('.header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+                header.style.background = 'rgba(255, 255, 255, 0.85)';
+            } else {
+                header.style.boxShadow = 'none';
+                header.style.background = 'rgba(255, 255, 255, 0.7)';
+            }
+        });
+
+        // Initial Hero Animation
+        gsap.from(".hero .badge", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" });
+        gsap.from(".hero h1", { y: 30, opacity: 0, duration: 1, delay: 0.2, ease: "power3.out" });
+        gsap.from(".hero p", { y: 20, opacity: 0, duration: 1, delay: 0.4, ease: "power3.out" });
+        gsap.from(".hero-btns", { y: 20, opacity: 0, duration: 1, delay: 0.6, ease: "power3.out" });
+        gsap.from(".chip", { 
+            y: 20, 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 0.8, 
+            stagger: 0.1, 
+            ease: "back.out(1.7)" 
+        });
+
+        // Scroll Reveals
+        gsap.utils.toArray('.gs-reveal').forEach(function(elem) {
+            gsap.from(elem, {
+                scrollTrigger: {
+                    trigger: elem,
+                    start: "top 85%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // Bento Grid Stagger
+        gsap.from('.gs-bento', {
+            scrollTrigger: {
+                trigger: '.bento-grid',
+                start: "top 80%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out"
+        });
+
+        // Slide from left/right
+        gsap.from('.gs-left', {
+            scrollTrigger: { trigger: '.modes-container', start: "top 80%" },
+            x: -50, opacity: 0, duration: 1, ease: "power3.out"
+        });
+        gsap.from('.gs-right .mode-item', {
+            scrollTrigger: { trigger: '.modes-container', start: "top 80%" },
+            x: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out"
+        });
+
+        // Pricing Cards Stagger
+        gsap.from('.gs-up', {
+            scrollTrigger: {
+                trigger: '.pricing-grid',
+                start: "top 80%",
+            },
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out"
+        });
+
+        // Number Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 90%",
+                once: true,
+                onEnter: () => {
+                    const target = +counter.getAttribute('data-target');
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    gsap.to(counter, {
+                        innerHTML: target,
+                        duration: 2,
+                        snap: { innerHTML: 1 },
+                        ease: "power2.out",
+                        onUpdate: function() {
+                            counter.innerHTML = Math.round(this.targets()[0].innerHTML) + suffix;
+                        }
+                    });
+                }
+            });
+        });
+
+        // Pricing Toggle Logic
+        const toggle = document.getElementById('billingToggle');
+        const prices = document.querySelectorAll('.price');
+        let isYearly = false;
+
+        const monthlyPrices = ['$0', '$9.99', '$24.99', 'Custom'];
+        const yearlyPrices = ['$0', '$7.99', '$19.99', 'Custom']; // 20% off roughly
+
+        toggle.addEventListener('click', () => {
+            isYearly = !isYearly;
+            toggle.classList.toggle('active');
+            
+            prices.forEach((priceEl, index) => {
+                if (index === 3) return; // Skip Custom
+                const val = isYearly ? yearlyPrices[index] : monthlyPrices[index];
+                
+                // Animate price change
+                gsap.to(priceEl, {
+                    opacity: 0,
+                    y: -10,
+                    duration: 0.2,
+                    onComplete: () => {
+                        priceEl.innerHTML = `${val}<span>/mo</span>`;
+                        gsap.to(priceEl, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(1.5)" });
+                    }
+                });
+            });
+        });
+
+        // Typing effect for the AI chat bubble on scroll
+        const typeTarget = document.querySelector('.type-animation');
+        const textToType = typeTarget.innerHTML;
+        typeTarget.innerHTML = ''; // clear initially
+
+        ScrollTrigger.create({
+            trigger: '.mock-window',
+            start: "top 70%",
+            once: true,
+            onEnter: () => {
+                let i = 0;
+                function typeWriter() {
+                    if (i < textToType.length) {
+                        typeTarget.innerHTML += textToType.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 20); // typing speed
+                    }
+                }
+                setTimeout(typeWriter, 1000); // delay start
+            }
+        });
+    </script>
+</body>
+</html>
